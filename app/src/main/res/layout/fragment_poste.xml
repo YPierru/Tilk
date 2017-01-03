@@ -1,0 +1,19 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="com.tilk.fragment.PosteFragment">
+
+        <include layout="@layout/layout_card_poste_debit"/>
+        <include layout="@layout/layout_card_poste_conso"/>
+        <include layout="@layout/layout_card_poste_evolution"/>
+
+    </LinearLayout>
+
+</ScrollView>
