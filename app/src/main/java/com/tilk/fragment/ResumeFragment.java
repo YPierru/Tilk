@@ -44,7 +44,7 @@ public class ResumeFragment extends Fragment{
         super.onActivityCreated(savedInstanceState);
 
 
-        LineChart chart = (LineChart) getView().findViewById(R.id.chart);
+        LineChart chart = (LineChart) getView().findViewById(R.id.chart_resume_conso);
         List<Entry> entries = new ArrayList<>();
 
 

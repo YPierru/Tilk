@@ -6,21 +6,28 @@ xmlns:card_view="http://schemas.android.com/apk/res-auto"
 android:id="@+id/card_resume_conso"
 android:layout_margin="5dp"
 android:layout_width="match_parent"
-android:layout_height="200dp"
-card_view:cardCornerRadius="4dp">
+android:layout_height="wrap_content"
+card_view:cardCornerRadius="4dp"
+    card_view:cardElevation="3dp">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
         <TextView
-            android:id="@+id/info_text"
+            android:id="@+id/tv_resume_conso_title"
             android:layout_margin="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Je suis consommation"/>
+            android:text="@string/resume_conso_title"
+            android:textSize="36sp"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="normal|bold"
+            android:textAlignment="viewStart"
+            android:paddingTop="5dp"
+            android:paddingLeft="10dp" />
         <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/chart"
+            android:id="@+id/chart_resume_conso"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="200dp" />
     </LinearLayout>
 </android.support.v7.widget.CardView>

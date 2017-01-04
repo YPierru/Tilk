@@ -2,6 +2,19 @@
     <string name="app_name">Tilk</string>
 
     <string name="menu_item_settings">Paramètres</string>
+    <string name="debit_title">Débit</string>
+    <string name="debit_unit">L/min</string>
+    <string name="conso_title">Consommation</string>
+    <string name="conso_jour">Journalière</string>
+    <string name="conso_hebdo">Hebdomadaire</string>
+    <string name="conso_mois">Mensuelle</string>
+    <string name="conso_annuelle">Annuelle</string>
+    <string name="evolution_title">Evolution</string>
+    <string name="resume_conso_title">Votre consommation</string>
+    <string name="resume_eco_title">Vos économies</string>
+    <string name="eco_hebdo">Hebdomadaire</string>
+    <string name="eco_mois">Mensuelle</string>
+    <string name="eco_annuelle">Annuelle</string>
 
 
 </resources>

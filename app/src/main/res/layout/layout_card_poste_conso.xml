@@ -6,12 +6,129 @@ xmlns:card_view="http://schemas.android.com/apk/res-auto"
 android:id="@+id/card_poste_consommation"
 android:layout_margin="5dp"
 android:layout_width="match_parent"
-android:layout_height="200dp"
-card_view:cardCornerRadius="4dp">
-    <TextView
-        android:id="@+id/info_text"
-        android:layout_margin="5dp"
+android:layout_height="wrap_content"
+card_view:cardCornerRadius="4dp"
+    card_view:cardElevation="3dp">
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="pattern consommation"/>
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tv_conso_title"
+            android:layout_margin="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/conso_title"
+            android:textSize="36sp"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="normal|bold"
+            android:textAlignment="viewStart"
+            android:paddingTop="5dp"
+            android:paddingLeft="10dp" />
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/tv_conso_jour_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/conso_jour"
+                android:textSize="20sp"
+                android:layout_alignParentLeft="true"
+                android:textColor="@android:color/background_dark"
+                android:paddingRight="5dp"
+                android:paddingLeft="10dp"/>
+
+            <TextView
+                android:id="@+id/tv_conso_jour_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.5 m3 (-10%)"
+                android:textSize="20sp"
+                android:layout_alignParentRight="true"
+                android:textColor="@android:color/background_dark" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/tv_conso_hebdo_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/conso_hebdo"
+                android:textSize="20sp"
+                android:layout_alignParentLeft="true"
+                android:textColor="@android:color/background_dark"
+                android:paddingRight="5dp"
+                android:paddingLeft="10dp"/>
+
+            <TextView
+                android:id="@+id/tv_conso_hebdo_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3 m3 (-5%)"
+                android:textSize="20sp"
+                android:layout_alignParentRight="true"
+                android:textColor="@android:color/background_dark" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/tv_conso_mois_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/conso_mois"
+                android:textSize="20sp"
+                android:layout_alignParentLeft="true"
+                android:textColor="@android:color/background_dark"
+                android:paddingRight="5dp"
+                android:paddingLeft="10dp"/>
+
+            <TextView
+                android:id="@+id/tv_conso_mois_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="15 m3 (+7%)"
+                android:textSize="20sp"
+                android:layout_alignParentRight="true"
+                android:textColor="@android:color/background_dark" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/tv_conso_annee_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/conso_annuelle"
+                android:textSize="20sp"
+                android:layout_alignParentLeft="true"
+                android:textColor="@android:color/background_dark"
+                android:paddingRight="5dp"
+                android:paddingLeft="10dp"/>
+
+            <TextView
+                android:id="@+id/tv_conso_annee_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="130 m3 (+9%)"
+                android:textSize="20sp"
+                android:layout_alignParentRight="true"
+                android:textColor="@android:color/background_dark" />
+        </RelativeLayout>
+    </LinearLayout>
 </android.support.v7.widget.CardView>
