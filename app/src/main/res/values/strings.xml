@@ -16,5 +16,18 @@
     <string name="eco_mois">Mensuelle</string>
     <string name="eco_annuelle">Annuelle</string>
 
+    <string name="tab_resume">Résumé</string>
+    <string name="tab_douche">Douche</string>
+    <string name="tab_lvaisselle">Lave-vaisselle</string>
+    <string name="tab_toilettes">Toilettes</string>
+    <string name="tab_machine">Machine à laver</string>
+
+    <string name="activity_list_settings">Tilk - Paramètres</string>
+    <string name="activity_settings_sensor">Paramètrer les capteurs</string>
+    <string name="activity_settings_tilk">Paramètrer le Tilk</string>
+
+    <string name="settings_sensors">Paramétrage des capteurs</string>
+    <string name="settings_tilk">Paramétrage du Tilk</string>
+
 
 </resources>

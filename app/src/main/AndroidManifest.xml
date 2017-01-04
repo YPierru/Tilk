@@ -15,6 +15,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activity.SettingsList"
+            android:label="@string/activity_list_settings"
+            android:parentActivityName=".activity.MainActivity" />
+
+        <activity android:name=".activity.SettingsTilk"
+            android:label="@string/activity_settings_tilk"
+            android:parentActivityName=".activity.SettingsList"  />
+
+        <activity android:name=".activity.SettingsSensor"
+            android:label="@string/activity_settings_sensor"
+            android:parentActivityName=".activity.SettingsList" />
     </application>
 
 </manifest>

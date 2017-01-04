@@ -20,7 +20,7 @@ import java.util.List;
  * Created by YPierru on 03/01/2017.
  */
 
-public class PosteFragment extends Fragment{
+public class PosteFragment extends Fragment {
 
     public PosteFragment() {
         // Required empty public constructor
@@ -29,6 +29,7 @@ public class PosteFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -62,5 +63,4 @@ public class PosteFragment extends Fragment{
         chart.setData(lineData);
         chart.invalidate();
     }
-
 }

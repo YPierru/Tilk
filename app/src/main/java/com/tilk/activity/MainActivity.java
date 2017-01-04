@@ -1,5 +1,6 @@
 package com.tilk.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -7,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.tilk.R;
 import com.tilk.adapter.ViewPagerAdapter;
@@ -20,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,8 +29,6 @@ public class MainActivity extends AppCompatActivity {
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
@@ -39,11 +39,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new ResumeFragment(), "Résumé");
-        adapter.addFragment(new PosteFragment(), "Douche");
-        adapter.addFragment(new PosteFragment(), "Lave-vaisselle");
-        adapter.addFragment(new PosteFragment(), "Toilettes");
-        adapter.addFragment(new PosteFragment(), "Machine à laver");
+
+        adapter.addFragment(new ResumeFragment(), getString(R.string.tab_resume));
+        adapter.addFragment(new PosteFragment(), getString(R.string.tab_douche));
+        adapter.addFragment(new PosteFragment(), getString(R.string.tab_lvaisselle));
+        adapter.addFragment(new PosteFragment(), getString(R.string.tab_toilettes));
+        adapter.addFragment(new PosteFragment(), getString(R.string.tab_machine));
+
+
         viewPager.setAdapter(adapter);
     }
 
@@ -55,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         itemSettings.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Toast.makeText(MainActivity.this,"Afficher paramètres",Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(MainActivity.this,SettingsList.class));
                 return false;
             }
         });
