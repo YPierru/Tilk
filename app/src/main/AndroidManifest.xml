@@ -2,31 +2,41 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.tilk">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".activity.MainActivity"/>
+
         <activity
             android:name=".activity.SettingsList"
             android:label="@string/activity_list_settings"
             android:parentActivityName=".activity.MainActivity" />
 
-        <activity android:name=".activity.SettingsTilk"
+        <activity
+            android:name=".activity.SettingsTilk"
             android:label="@string/activity_settings_tilk"
-            android:parentActivityName=".activity.SettingsList"  />
+            android:parentActivityName=".activity.SettingsList" />
 
-        <activity android:name=".activity.SettingsSensor"
+        <activity
+            android:name=".activity.SettingsSensor"
             android:label="@string/activity_settings_sensor"
             android:parentActivityName=".activity.SettingsList" />
+
+        <activity android:name=".activity.LoginActivity"/>
+
+        <activity android:name=".activity.SplashScreenActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

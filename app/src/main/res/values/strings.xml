@@ -2,6 +2,8 @@
     <string name="app_name">Tilk</string>
 
     <string name="menu_item_settings">Paramètres</string>
+    <string name="menu_item_logout">Déconnexion</string>
+
     <string name="debit_title">Débit</string>
     <string name="debit_unit">L/min</string>
     <string name="conso_title">Consommation</string>
@@ -28,6 +30,15 @@
 
     <string name="settings_sensors">Paramétrage des capteurs</string>
     <string name="settings_tilk">Paramétrage du Tilk</string>
+
+    <string name="login_label">Connexion</string>
+    <string name="login_email">Email</string>
+    <string name="login_pwd">Mot de passe</string>
+    <string name="login_bad_format">Erreur de formatage</string>
+    <string name="login_failed">Email/mot de passe incorrect</string>
+    <string name="login_empty_pwd">Mot de passe vide</string>
+
+    <string name="progressdialog_label_connexion">Connexion...</string>
 
 
 </resources>

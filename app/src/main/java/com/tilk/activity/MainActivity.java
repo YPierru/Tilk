@@ -13,6 +13,8 @@ import com.tilk.R;
 import com.tilk.adapter.ViewPagerAdapter;
 import com.tilk.fragment.PosteFragment;
 import com.tilk.fragment.ResumeFragment;
+import com.tilk.utils.Constants;
+import com.tilk.utils.SessionManager;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,12 +22,16 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
 
+    private SessionManager sessionManager;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        sessionManager=new SessionManager(MainActivity.this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -63,7 +69,30 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        MenuItem itemLogout = menu.add(getString(R.string.menu_item_logout)).setIcon(R.drawable.ic_logout);
+        itemLogout.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        itemLogout.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                sessionManager.setPreferences(Constants.SESSION_STATUS,Constants.STATUS_CODE_OFFLINE);
+                finish();
+                return false;
+            }
+        });
+
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//***Change Here***
+        startActivity(intent);
+        finish();
+        System.exit(0);
     }
 
 }
