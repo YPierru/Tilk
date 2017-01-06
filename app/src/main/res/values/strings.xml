@@ -28,8 +28,8 @@
     <string name="activity_settings_sensor">Paramètrer les capteurs</string>
     <string name="activity_settings_tilk">Paramètrer le Tilk</string>
 
-    <string name="settings_sensors">Paramétrage des capteurs</string>
-    <string name="settings_tilk">Paramétrage du Tilk</string>
+    <string name="menu_label_settings">Paramètres</string>
+    <string name="manu_label_logout">Deconnexion</string>
 
     <string name="login_label">Connexion</string>
     <string name="login_email">Email</string>
@@ -40,6 +40,10 @@
 
     <string name="progressdialog_label_connexion">Connexion...</string>
     <string name="progressdialog_label_init">Initialisation...</string>
+    <string name="title_activity_settings">Paramètres</string>
+    <string name="title_activity_rooms">Configurer les pièces</string>
+
+    <string name="session_checkbox_rooms">checkbox_rooms</string>
 
 
 

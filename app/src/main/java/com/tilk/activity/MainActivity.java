@@ -9,9 +9,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.tilk.R;
+import com.tilk.activity.settings.SettingsActivity;
 import com.tilk.adapter.ViewPagerAdapter;
 import com.tilk.fragment.PosteFragment;
 import com.tilk.fragment.ResumeFragment;
@@ -87,28 +89,31 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        MenuItem itemSettings = menu.add(getResources().getString(R.string.menu_item_settings)).setIcon(R.drawable.ic_settings);
-        itemSettings.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        itemSettings.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                startActivity(new Intent(MainActivity.this,SettingsListActivity.class));
-                return false;
-            }
-        });
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
 
-        MenuItem itemLogout = menu.add(getString(R.string.menu_item_logout)).setIcon(R.drawable.ic_logout);
-        itemLogout.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        itemLogout.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch(item.getItemId())
+        {
+            case R.id.menu_preferences:
+            {
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                return true;
+            }
+
+            case R.id.menu_logout:
+            {
                 sessionManager.setUserOffline();
                 finish();
-                return false;
+                return true;
             }
-        });
+        }
 
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

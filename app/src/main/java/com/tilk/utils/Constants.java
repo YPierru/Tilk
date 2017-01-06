@@ -15,8 +15,6 @@ public class Constants {
     public final static String SESSION_WATERLOAD="waterload";
     public final static String SESSION_NUMBER_WATERLOADS="number_waterloads";
 
-    public final static String SHAREDPREFERENCES_FILE="Tilk.sharedpref";
-
     private final static String URL_SERVER="http://tilk.laurentjerber.com";
     public final static String URL_LOGIN=URL_SERVER+"/login.php";
     public final static String URL_GET_LOADS=URL_SERVER+"/get_loads.php";

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <PreferenceCategory
+        android:title="Paramètres de l'application">
+
+        <CheckBoxPreference
+            android:key="@string/session_checkbox_rooms"
+            android:title="Vue par pièces de l'habitation"
+            android:summary="Si activé, vous permet d'affecter un ou plusieurs postes de consommation d'eau à une pièce."
+            android:defaultValue="false"/>
+
+        <PreferenceScreen
+            android:title="Configurer les pièces de la maison"
+            android:summary="Ajouter les pièces de votre habitation et affectez-y les postes de consommation d'eau"
+            android:dependency="@string/session_checkbox_rooms">
+
+            <intent android:action="com.tilk.activity.RoomsActivity"/>
+        </PreferenceScreen>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

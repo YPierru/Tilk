@@ -2,6 +2,7 @@ package com.tilk.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 import com.tilk.models.WaterLoad;
@@ -81,10 +82,11 @@ public class SharedPreferencesManager {
     }
 
     private SharedPreferences.Editor getEditor(){
-        return context.getSharedPreferences(Constants.SHAREDPREFERENCES_FILE, Context.MODE_PRIVATE).edit();
+
+        return PreferenceManager.getDefaultSharedPreferences(context).edit();
     }
 
-    private SharedPreferences getSharedPref(){
-        return context.getSharedPreferences(Constants.SHAREDPREFERENCES_FILE, Context.MODE_PRIVATE);
+    private SharedPreferences getSharedPref() {
+        return PreferenceManager.getDefaultSharedPreferences(context);
     }
 }
