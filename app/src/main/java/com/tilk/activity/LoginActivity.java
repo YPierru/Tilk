@@ -14,7 +14,7 @@ import com.tilk.R;
 import com.tilk.utils.Constants;
 import com.tilk.utils.HttpPostManager;
 import com.tilk.utils.Logger;
-import com.tilk.utils.SessionManager;
+import com.tilk.utils.SharedPreferencesManager;
 
 import org.json.JSONObject;
 
@@ -29,7 +29,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnLogin;
 
 
-    private SessionManager sessionManager;
+    private SharedPreferencesManager sessionManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         Logger.enableLog();
 
-        sessionManager = new SessionManager(LoginActivity.this);
+        sessionManager = new SharedPreferencesManager(LoginActivity.this);
 
         etEmailText = (EditText)findViewById(R.id.input_email);
 
@@ -107,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onLoginSuccess() {
-        sessionManager.setPreferences(Constants.SESSION_STATUS, Constants.STATUS_CODE_ONLINE);
+        sessionManager.setUserOnline();
         startActivity(new Intent(LoginActivity.this,MainActivity.class));
         finish();
     }
@@ -167,7 +167,7 @@ public class LoginActivity extends AppCompatActivity {
             boolean isLoggingOK=false;
             try {
 
-                String response = HttpPostManager.sendPost("email="+email+"&password="+password,"http://tilk.laurentjerber.com/login.php");
+                String response = HttpPostManager.sendPost("email="+email+"&password="+password,Constants.URL_LOGIN);
 
                 JSONObject jsonObject = new JSONObject(response);
                 int code = jsonObject.getInt("code");

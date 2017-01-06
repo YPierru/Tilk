@@ -1,6 +1,8 @@
 package com.tilk.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -13,8 +15,17 @@ import com.tilk.R;
 import com.tilk.adapter.ViewPagerAdapter;
 import com.tilk.fragment.PosteFragment;
 import com.tilk.fragment.ResumeFragment;
+import com.tilk.models.WaterLoad;
 import com.tilk.utils.Constants;
-import com.tilk.utils.SessionManager;
+import com.tilk.utils.HttpPostManager;
+import com.tilk.utils.Logger;
+import com.tilk.utils.SharedPreferencesManager;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,16 +33,32 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
 
-    private SessionManager sessionManager;
+    private SharedPreferencesManager sessionManager;
 
-
+    private ArrayList<WaterLoad> listWaterLoads = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Logger.enableLog();
 
-        sessionManager=new SessionManager(MainActivity.this);
+        sessionManager=new SharedPreferencesManager(MainActivity.this);
+
+        if(sessionManager.getFirstRun()){
+            RetrieveLoads retrieveLoads = new RetrieveLoads();
+            try {
+                listWaterLoads=retrieveLoads.execute().get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+            sessionManager.saveWaterLoads(listWaterLoads);
+            sessionManager.setFirstRunKO();
+        }else{
+            listWaterLoads = sessionManager.getWaterLoads();
+        }
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -47,11 +74,12 @@ public class MainActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         adapter.addFragment(new ResumeFragment(), getString(R.string.tab_resume));
-        adapter.addFragment(new PosteFragment(), getString(R.string.tab_douche));
-        adapter.addFragment(new PosteFragment(), getString(R.string.tab_lvaisselle));
-        adapter.addFragment(new PosteFragment(), getString(R.string.tab_toilettes));
-        adapter.addFragment(new PosteFragment(), getString(R.string.tab_machine));
 
+        for(WaterLoad waterLoad : listWaterLoads){
+            if(waterLoad.getStatus()==1) {
+                adapter.addFragment(new PosteFragment(), waterLoad.getName());
+            }
+        }
 
         viewPager.setAdapter(adapter);
     }
@@ -64,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         itemSettings.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                startActivity(new Intent(MainActivity.this,SettingsList.class));
+                startActivity(new Intent(MainActivity.this,SettingsListActivity.class));
                 return false;
             }
         });
@@ -74,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         itemLogout.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                sessionManager.setPreferences(Constants.SESSION_STATUS,Constants.STATUS_CODE_OFFLINE);
+                sessionManager.setUserOffline();
                 finish();
                 return false;
             }
@@ -93,6 +121,55 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
         System.exit(0);
+    }
+
+
+    private class RetrieveLoads extends AsyncTask<Void,Void,ArrayList<WaterLoad>> {
+
+        private ProgressDialog progressDialog;
+
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog = new ProgressDialog(MainActivity.this);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setCancelable(false);
+            progressDialog.setMessage(getString(R.string.progressdialog_label_init));
+            progressDialog.show();
+        }
+
+        @Override
+        protected ArrayList<WaterLoad> doInBackground(Void... args) {
+            ArrayList<WaterLoad> listWaterLoads = new ArrayList<>();
+            try {
+
+                String response = HttpPostManager.sendPost("",Constants.URL_GET_LOADS);
+
+                JSONObject jsonObject = new JSONObject(response);
+                JSONArray arrayLoads = jsonObject.getJSONArray("response");
+
+                String name;
+                int status;
+
+                for(int i=0;i<arrayLoads.length();i++){
+                    name = arrayLoads.getJSONObject(i).getString("name");
+                    status = Integer.parseInt(arrayLoads.getJSONObject(i).getString("status"));
+
+                    listWaterLoads.add(new WaterLoad(name,status,0));
+                }
+
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+            return listWaterLoads;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<WaterLoad> result) {
+            progressDialog.dismiss();
+        }
     }
 
 }

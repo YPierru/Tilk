@@ -5,19 +5,18 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.tilk.R;
-import com.tilk.utils.Constants;
-import com.tilk.utils.SessionManager;
+import com.tilk.utils.SharedPreferencesManager;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
-    private SessionManager sessionManager;
+    private SharedPreferencesManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        sessionManager=new SessionManager(SplashScreenActivity.this);
+        sessionManager=new SharedPreferencesManager(SplashScreenActivity.this);
 
         Thread background = new Thread() {
             public void run() {
@@ -27,9 +26,9 @@ public class SplashScreenActivity extends AppCompatActivity {
                     sleep(2000);
 
                     // After 5 seconds redirect to another intent
-                    int status=sessionManager.getPreferences(Constants.SESSION_STATUS);
+                    boolean userStatus=sessionManager.getUserStatus();
 
-                    if (status==Constants.STATUS_CODE_ONLINE){
+                    if (userStatus){
                         Intent i=new Intent(SplashScreenActivity.this,MainActivity.class);
                         startActivity(i);
                     }else{

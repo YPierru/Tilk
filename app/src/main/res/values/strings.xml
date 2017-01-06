@@ -39,6 +39,8 @@
     <string name="login_empty_pwd">Mot de passe vide</string>
 
     <string name="progressdialog_label_connexion">Connexion...</string>
+    <string name="progressdialog_label_init">Initialisation...</string>
+
 
 
 </resources>

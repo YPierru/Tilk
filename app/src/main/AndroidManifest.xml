@@ -14,19 +14,19 @@
         <activity android:name=".activity.MainActivity"/>
 
         <activity
-            android:name=".activity.SettingsList"
+            android:name=".activity.SettingsListActivity"
             android:label="@string/activity_list_settings"
             android:parentActivityName=".activity.MainActivity" />
 
         <activity
             android:name=".activity.SettingsTilk"
             android:label="@string/activity_settings_tilk"
-            android:parentActivityName=".activity.SettingsList" />
+            android:parentActivityName=".activity.SettingsListActivity" />
 
         <activity
             android:name=".activity.SettingsSensor"
             android:label="@string/activity_settings_sensor"
-            android:parentActivityName=".activity.SettingsList" />
+            android:parentActivityName=".activity.SettingsListActivity" />
 
         <activity android:name=".activity.LoginActivity"/>
 

@@ -13,7 +13,7 @@ import android.widget.ListView;
 
 import com.tilk.R;
 
-public class SettingsList extends AppCompatActivity {
+public class SettingsListActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private String[] settings;
@@ -32,7 +32,7 @@ public class SettingsList extends AppCompatActivity {
        settings=new String[]{getString(R.string.settings_sensors),getString(R.string.settings_tilk)};
 
         listSettings = (ListView)findViewById(R.id.list_types_settings);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(SettingsList.this,android.R.layout.simple_list_item_1, settings);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(SettingsListActivity.this,android.R.layout.simple_list_item_1, settings);
         listSettings.setAdapter(adapter);
 
         listSettings.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -41,9 +41,9 @@ public class SettingsList extends AppCompatActivity {
                 String selected = settings[i];
 
                 if(selected.equals(settings[0])){
-                    startActivity(new Intent(SettingsList.this,SettingsSensor.class));
+                    startActivity(new Intent(SettingsListActivity.this,SettingsSensor.class));
                 }else if(selected.equals(settings[1])){
-                    startActivity(new Intent(SettingsList.this,SettingsTilk.class));
+                    startActivity(new Intent(SettingsListActivity.this,SettingsTilk.class));
                 }
             }
         });
