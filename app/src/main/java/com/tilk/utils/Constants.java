@@ -14,6 +14,8 @@ public class Constants {
     public final static String SESSION_STATUS="status";
     public final static String SESSION_WATERLOAD="waterload";
     public final static String SESSION_NUMBER_WATERLOADS="number_waterloads";
+    public final static String SESSION_ROOM="room";
+    public final static String SESSION_NUMBER_ROOMS="number_rooms";
 
     private final static String URL_SERVER="http://tilk.laurentjerber.com";
     public final static String URL_LOGIN=URL_SERVER+"/login.php";

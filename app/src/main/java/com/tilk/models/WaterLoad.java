@@ -9,11 +9,13 @@ public class WaterLoad {
     private String name;
     private int status;
     private int currentFlow;
+    private boolean inRoom;
 
-    public WaterLoad(String name, int status, int currentFlow) {
+    public WaterLoad(String name, int status, int currentFlow,boolean inRoom) {
         this.name = name;
         this.status = status;
         this.currentFlow = currentFlow;
+        this.inRoom=inRoom;
     }
 
     public String getName() {
@@ -40,12 +42,21 @@ public class WaterLoad {
         this.currentFlow = currentFlow;
     }
 
+    public boolean isInRoom(){
+        return inRoom;
+    }
+
+    public void setInRoom(boolean inRoom){
+        this.inRoom=inRoom;
+    }
+
     @Override
     public String toString() {
         return "WaterLoad{" +
                 "name='" + name + '\'' +
                 ", status=" + status +
                 ", currentFlow=" + currentFlow +
+                ", inRoom=" + inRoom+
                 '}';
     }
 }

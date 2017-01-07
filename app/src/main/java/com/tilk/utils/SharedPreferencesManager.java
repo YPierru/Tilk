@@ -5,9 +5,11 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
+import com.tilk.models.Room;
 import com.tilk.models.WaterLoad;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by YPierru on 05/01/2017.
@@ -79,6 +81,34 @@ public class SharedPreferencesManager {
         }
 
         return listWaterLoads;
+    }
+
+    public void saveRooms(List<Room> listRooms){
+        SharedPreferences.Editor editor = getEditor();
+        String json;
+
+        for(int i=0;i<listRooms.size();i++){
+            json=gson.toJson(listRooms.get(i));
+            editor.putString(Constants.SESSION_ROOM+""+i,json);
+            editor.apply();
+        }
+
+        editor.putInt(Constants.SESSION_NUMBER_ROOMS, listRooms.size());
+        editor.apply();
+    }
+
+    public ArrayList<Room> getRooms(){
+        SharedPreferences prefs = getSharedPref();
+        ArrayList<Room> listRooms = new ArrayList<>();
+        String json;
+        int size = prefs.getInt(Constants.SESSION_NUMBER_ROOMS,-1);
+
+        for(int i=0;i<size;i++){
+            json = prefs.getString(Constants.SESSION_ROOM+""+i,"");
+            listRooms.add(gson.fromJson(json,Room.class));
+        }
+
+        return listRooms;
     }
 
     private SharedPreferences.Editor getEditor(){

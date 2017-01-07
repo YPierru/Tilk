@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
 
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
+        inflater.inflate(R.menu.menu_main_activity, menu);
         return true;
     }
 
@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
                     name = arrayLoads.getJSONObject(i).getString("name");
                     status = Integer.parseInt(arrayLoads.getJSONObject(i).getString("status"));
 
-                    listWaterLoads.add(new WaterLoad(name,status,0));
+                    listWaterLoads.add(new WaterLoad(name,status,0,false));
                 }
 
 

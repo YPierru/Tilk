@@ -40,6 +40,15 @@
             android:divider="@android:color/darker_gray"
             android:dividerHeight="0.5dp" />
 
+
     </RelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_add_room"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="25dp"
+        android:src="@drawable/ic_add_room"/>
 
 </android.support.design.widget.CoordinatorLayout>
