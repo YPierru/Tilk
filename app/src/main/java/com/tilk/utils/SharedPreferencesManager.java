@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
+import com.tilk.R;
 import com.tilk.models.Room;
 import com.tilk.models.WaterLoad;
 
@@ -109,6 +110,11 @@ public class SharedPreferencesManager {
         }
 
         return listRooms;
+    }
+
+    public boolean isRoomOrganisation(){
+        SharedPreferences prefs = getSharedPref();
+        return prefs.getBoolean(context.getString(R.string.session_checkbox_rooms),false);
     }
 
     private SharedPreferences.Editor getEditor(){

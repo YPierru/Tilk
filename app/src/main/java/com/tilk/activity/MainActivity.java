@@ -17,6 +17,7 @@ import com.tilk.activity.settings.SettingsActivity;
 import com.tilk.adapter.ViewPagerAdapter;
 import com.tilk.fragment.PosteFragment;
 import com.tilk.fragment.ResumeFragment;
+import com.tilk.models.Room;
 import com.tilk.models.WaterLoad;
 import com.tilk.utils.Constants;
 import com.tilk.utils.HttpPostManager;
@@ -62,26 +63,41 @@ public class MainActivity extends AppCompatActivity {
             listWaterLoads = sessionManager.getWaterLoads();
         }
 
+
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
-        setupViewPager(viewPager);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        setupViewPager(viewPager);
+    }
+
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
+        ArrayList<Room> listRooms = sessionManager.getRooms();
         adapter.addFragment(new ResumeFragment(), getString(R.string.tab_resume));
 
-        for(WaterLoad waterLoad : listWaterLoads){
-            if(waterLoad.getStatus()==1) {
-                adapter.addFragment(new PosteFragment(), waterLoad.getName());
+        if(sessionManager.isRoomOrganisation()){
+            for(Room room : listRooms){
+                adapter.addFragment(new PosteFragment(),room.getName());
+            }
+        }else{
+            for(WaterLoad waterLoad : listWaterLoads){
+                if(waterLoad.getStatus()==1) {
+                    adapter.addFragment(new PosteFragment(), waterLoad.getName());
+                }
             }
         }
+
 
         viewPager.setAdapter(adapter);
     }

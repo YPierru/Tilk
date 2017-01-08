@@ -45,7 +45,6 @@ public class PosteFragment extends Fragment {
     public void onActivityCreated (Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
 
-
         LineChart chart = (LineChart) getView().findViewById(R.id.chart_evolution);
         List<Entry> entries = new ArrayList<>();
 

@@ -73,6 +73,19 @@ public class RoomsActivity extends AppCompatActivity {
             }
         });
 
+        expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+            @Override
+            public void onGroupExpand(int i) {
+                expandableListAdapter.showButton();
+            }
+        });
+
+        expandableListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
+            @Override
+            public void onGroupCollapse(int i) {
+                expandableListAdapter.hideButton();
+            }
+        });
 
         expandableListView.setOnItemLongClickListener(new ExpandableListView.OnItemLongClickListener() {
             @Override
@@ -80,8 +93,6 @@ public class RoomsActivity extends AppCompatActivity {
 
                 if(ExpandableListView.getPackedPositionType(id) == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
                     int groupPosition = ExpandableListView.getPackedPositionGroup(id);
-                    //Log.i("TAG",""+listRooms.size());
-                    //Log.i("TAG",""+listRoomsName.size());
 
                     Log.i("TAG",""+groupPosition);
 

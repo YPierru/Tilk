@@ -31,6 +31,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
     private List<String> expandableListTitle;
     private HashMap<String, List<String>> expandableListDetail;
     private SharedPreferencesManager sharedPreferencesManager;
+    private Button btnAddLoad;
 
     public CustomExpandableListAdapter(Context context, SharedPreferencesManager sharedPreferencesManager, List<String> expandableListTitle, HashMap<String, List<String>> expandableListDetail) {
         this.context = context;
@@ -93,7 +94,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         listTitleTextView.setTypeface(null, Typeface.BOLD);
         listTitleTextView.setText(listTitle);
 
-        Button btnAddLoad = (Button)convertView.findViewById(R.id.btn_add_load);
+        btnAddLoad = (Button)convertView.findViewById(R.id.btn_add_load);
 
         btnAddLoad.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -208,6 +209,14 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
     private void refresh(){
         this.notifyDataSetChanged();
+    }
+
+    public void showButton(){
+        btnAddLoad.setVisibility(View.VISIBLE);
+    }
+
+    public void hideButton(){
+        btnAddLoad.setVisibility(View.INVISIBLE);
     }
 
     @Override
