@@ -1,4 +1,4 @@
-package com.tilk.activity.settings;
+package com.tilk.fragment;
 
 import android.os.Bundle;
 import android.preference.PreferenceFragment;

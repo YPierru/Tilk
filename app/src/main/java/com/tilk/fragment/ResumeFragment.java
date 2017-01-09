@@ -17,6 +17,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.tilk.R;
+import com.tilk.utils.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,12 +31,6 @@ public class ResumeFragment extends Fragment{
     private IAxisValueFormatter formatter;
     private String[] quarters = new String[] { "0","1","2","Mars","4","5","Juin","7","8","Sept.","10","11", "Déc." };
 
-
-    public ResumeFragment() {
-        // Required empty public constructor
-    }
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +42,10 @@ public class ResumeFragment extends Fragment{
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_resume, container, false);
+    }
+
+    public void printName(){
+        Logger.logI("Je suis résumé");
     }
 
     @Override

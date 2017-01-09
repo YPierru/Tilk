@@ -20,5 +20,6 @@ public class Constants {
     private final static String URL_SERVER="http://tilk.laurentjerber.com";
     public final static String URL_LOGIN=URL_SERVER+"/login.php";
     public final static String URL_GET_LOADS=URL_SERVER+"/get_loads.php";
+    public final static String URL_GET_CURRENTFLOW=URL_SERVER+"/get_currentflow.php";
 
 }

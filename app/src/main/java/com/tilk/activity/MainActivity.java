@@ -13,10 +13,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.tilk.R;
-import com.tilk.activity.settings.SettingsActivity;
 import com.tilk.adapter.ViewPagerAdapter;
-import com.tilk.fragment.PosteFragment;
+import com.tilk.fragment.WaterLoadFragment;
 import com.tilk.fragment.ResumeFragment;
+import com.tilk.fragment.RoomFragment;
 import com.tilk.models.Room;
 import com.tilk.models.WaterLoad;
 import com.tilk.utils.Constants;
@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private ViewPagerAdapter adapter;
 
     private SharedPreferencesManager sessionManager;
 
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+        adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -72,6 +74,37 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+
+                if(tab.getPosition()>0){
+                    WaterLoadFragment waterLoadFragment= (WaterLoadFragment) adapter.getItem(tab.getPosition());
+                    waterLoadFragment.startMonitor();
+
+
+
+
+                }
+
+
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                if(tab.getPosition()>0){
+                    WaterLoadFragment waterLoadFragment= (WaterLoadFragment) adapter.getItem(tab.getPosition());
+                    waterLoadFragment.stopMonitor();
+                }
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
 
     @Override
@@ -81,24 +114,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         ArrayList<Room> listRooms = sessionManager.getRooms();
         adapter.addFragment(new ResumeFragment(), getString(R.string.tab_resume));
 
         if(sessionManager.isRoomOrganisation()){
             for(Room room : listRooms){
-                adapter.addFragment(new PosteFragment(),room.getName());
+                adapter.addFragment(new RoomFragment(),room.getName());
             }
         }else{
             for(WaterLoad waterLoad : listWaterLoads){
                 if(waterLoad.getStatus()==1) {
-                    adapter.addFragment(new PosteFragment(), waterLoad.getName());
+                    adapter.addFragment(WaterLoadFragment.newInstance(waterLoad.getName()), waterLoad.getName());
                 }
             }
         }
-
-
         viewPager.setAdapter(adapter);
     }
 
@@ -148,7 +178,6 @@ public class MainActivity extends AppCompatActivity {
     private class RetrieveLoads extends AsyncTask<Void,Void,ArrayList<WaterLoad>> {
 
         private ProgressDialog progressDialog;
-
 
         @Override
         protected void onPreExecute() {

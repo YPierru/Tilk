@@ -20,11 +20,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.settings.SettingsActivity"
+            android:name=".activity.SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity android:name=".activity.RoomsActivity"
             android:label="@string/title_activity_rooms"
-            android:parentActivityName=".activity.settings.SettingsActivity">
+            android:parentActivityName=".activity.SettingsActivity">
             <intent-filter>
                 <action android:name="com.tilk.activity.RoomsActivity" />
                 <category android:name="android.intent.category.DEFAULT" />

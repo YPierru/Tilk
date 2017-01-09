@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.tilk.R;
 import com.tilk.models.Room;
@@ -28,21 +27,21 @@ import java.util.List;
 public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
     private Context context;
-    private List<String> expandableListTitle;
-    private HashMap<String, List<String>> expandableListDetail;
+    private List<String> listRoomsName;
+    private HashMap<String, List<String>> mapRoomsNameLoadsName;
     private SharedPreferencesManager sharedPreferencesManager;
     private Button btnAddLoad;
 
     public CustomExpandableListAdapter(Context context, SharedPreferencesManager sharedPreferencesManager, List<String> expandableListTitle, HashMap<String, List<String>> expandableListDetail) {
         this.context = context;
-        this.expandableListTitle = expandableListTitle;
-        this.expandableListDetail = expandableListDetail;
+        this.listRoomsName = expandableListTitle;
+        this.mapRoomsNameLoadsName = expandableListDetail;
         this.sharedPreferencesManager=sharedPreferencesManager;
     }
 
     @Override
     public Object getChild(int listPosition, int expandedListPosition) {
-        return this.expandableListDetail.get(this.expandableListTitle.get(listPosition)).get(expandedListPosition);
+        return this.mapRoomsNameLoadsName.get(this.listRoomsName.get(listPosition)).get(expandedListPosition);
     }
 
     @Override
@@ -64,18 +63,18 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int listPosition) {
-        return this.expandableListDetail.get(this.expandableListTitle.get(listPosition))
+        return this.mapRoomsNameLoadsName.get(this.listRoomsName.get(listPosition))
                 .size();
     }
 
     @Override
     public Object getGroup(int listPosition) {
-        return this.expandableListTitle.get(listPosition);
+        return this.listRoomsName.get(listPosition);
     }
 
     @Override
     public int getGroupCount() {
-        return this.expandableListTitle.size();
+        return this.listRoomsName.size();
     }
 
     @Override
@@ -110,12 +109,20 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         // Build an AlertDialog
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
+        //List of all the water loads
         final ArrayList<WaterLoad> listWaterLoads = sharedPreferencesManager.getWaterLoads();
-        List<String> listWaterLoadsNameInRoom=expandableListDetail.get(listTitle);
+
+        //Name of the water loads in the current room
+        List<String> listWaterLoadsNameInRoom= mapRoomsNameLoadsName.get(listTitle);
+
+        //Array used to store the water loads checked in the current room
         final boolean[] checkedWaterLoads = new boolean[listWaterLoads.size()];
 
 
 
+        //Building the boolean array
+        //for each water loads, if its name is in the list of loads in the current room, then it's checked
+        //else, it's not checked
         for(int i=0;i<listWaterLoads.size();i++){
             for(int j=0;j<listWaterLoadsNameInRoom.size();j++){
 
@@ -131,6 +138,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
             }
         }
 
+        //Method setMultiChoiceItems of DialogAlert Builder must use only array
         final String[] arrayWaterLoadsName = new String[listWaterLoads.size()];
         for(int i=0;i<listWaterLoads.size();i++){
             arrayWaterLoadsName[i]=listWaterLoads.get(i).getName();
@@ -140,17 +148,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         builder.setMultiChoiceItems(arrayWaterLoadsName,checkedWaterLoads, new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-
-                // Update the current focused item's checked status
                 checkedWaterLoads[which]=isChecked;
-
-                // Get the current focused item
-                //String currentItem = listWaterLoads.get(which).getName();
-
-                String currentItem = listWaterLoads.get(which).getName();
-
-                // Notify the current action
-                Toast.makeText(context,currentItem + " " + isChecked, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -169,6 +167,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
                 Room currentRoom=null;
                 int indexCurrentRoom=-1;
 
+                //Retrieving the current room
                 for(int i=0;i<listRooms.size();i++){
                     if(listRooms.get(i).getName().equals(listTitle)){
                         currentRoom=listRooms.get(i);
@@ -177,7 +176,10 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
                     }
                 }
 
+                //Removing all water loads
                 currentRoom.clearWaterLoads();
+
+                //Adding water loads to the current room
                 for (int i = 0; i < checkedWaterLoads.length; i++) {
                     listWaterLoads.get(i).setInRoom(checkedWaterLoads[i]);
                     if(listWaterLoads.get(i).isInRoom()){
@@ -185,16 +187,17 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
                     }
                 }
 
+                //Replacing the current room in the list
                 listRooms.remove(indexCurrentRoom);
                 listRooms.add(indexCurrentRoom,currentRoom);
 
+                //Saving water loads and rooms
                 sharedPreferencesManager.saveWaterLoads(listWaterLoads);
                 sharedPreferencesManager.saveRooms(listRooms);
                 refresh();
             }
         });
 
-        // Set the neutral/cancel button click listener
         builder.setNeutralButton("Annuler", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -228,4 +231,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
     public boolean isChildSelectable(int listPosition, int expandedListPosition) {
         return true;
     }
+
+
+
+
 }

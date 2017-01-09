@@ -1,7 +1,9 @@
-package com.tilk.activity.settings;
+package com.tilk.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+
+import com.tilk.fragment.SettingsFragment;
 
 public class SettingsActivity extends Activity {
 
