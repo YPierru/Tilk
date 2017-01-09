@@ -7,7 +7,6 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,7 +16,6 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import com.tilk.R;
 import com.tilk.adapter.CustomExpandableListAdapter;
@@ -94,16 +92,10 @@ public class RoomsActivity extends AppCompatActivity {
                 if(ExpandableListView.getPackedPositionType(id) == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
                     int groupPosition = ExpandableListView.getPackedPositionGroup(id);
 
-                    Log.i("TAG",""+groupPosition);
-
-
                     alertDialogDeleteRoom(listRooms.get(groupPosition));
 
-                    Toast.makeText(getApplicationContext(),
-                            "long click title"+listRoomsName.get(groupPosition),
-                            Toast.LENGTH_SHORT)
-                            .show();
                     expandableListView.collapseGroup(groupPosition);
+
                     return true;
                 }
 
@@ -226,6 +218,7 @@ public class RoomsActivity extends AppCompatActivity {
                         sharedPreferencesManager.saveRooms(listRooms);
                         syncLists();
                         refreshELV();
+                        sharedPreferencesManager.setMustBeRestarted(true);
                         dialog.dismiss();
                     }
                 })

@@ -1,10 +1,12 @@
 package com.tilk.models;
 
+import java.io.Serializable;
+
 /**
  * Created by YPierru on 06/01/2017.
  */
 
-public class WaterLoad {
+public class WaterLoad implements Serializable{
 
     private String name;
     private int status;

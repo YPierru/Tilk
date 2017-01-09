@@ -13,6 +13,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.tilk.R;
+import com.tilk.models.WaterLoad;
 import com.tilk.utils.Constants;
 import com.tilk.utils.HttpPostManager;
 import com.tilk.utils.Logger;
@@ -25,23 +26,24 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+
 /**
  * Created by YPierru on 03/01/2017.
  */
 
 public class WaterLoadFragment extends Fragment {
 
-    private String name;
+    private WaterLoad waterLoad;
     private WaterLoadMonitor waterLoadMonitor;
-    private int currentFlow;
 
     private TextView tvDebitValue;
 
-    public static WaterLoadFragment newInstance(String name){
+
+    public static WaterLoadFragment newInstance(WaterLoad waterLoad){
         WaterLoadFragment waterLoadFragment = new WaterLoadFragment();
 
         Bundle args = new Bundle();
-        args.putString("load_name",name);
+        args.putSerializable("waterload",waterLoad);
         waterLoadFragment.setArguments(args);
 
         return waterLoadFragment;
@@ -50,34 +52,42 @@ public class WaterLoadFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        name = getArguments().getString("load_name");
-
+        waterLoad = (WaterLoad)getArguments().getSerializable("waterload");
     }
 
     public void startMonitor(){
-        Logger.logI("********************* START MONITORING *********************");
-        waterLoadMonitor = new WaterLoadMonitor();
-        waterLoadMonitor.startMonitor();
+        if(waterLoadMonitor==null) {
+            Logger.logI("********************* START MONITORING " + waterLoad.getName() + " *********************");
+            waterLoadMonitor = new WaterLoadMonitor();
+            waterLoadMonitor.startMonitor();
+        }
     }
 
     public void stopMonitor(){
-        Logger.logI("********************* STOP MONITORING *********************");
         if(waterLoadMonitor!=null) {
+            Logger.logI("********************* STOP MONITORING "+waterLoad.getName()+" *********************");
             waterLoadMonitor.stopMonitor();
+            waterLoadMonitor=null;
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        startMonitor();
+        //Logger.logI("bonjour, de "+waterLoad.getName());
+
     }
 
     @Override
     public void onPause() {
         super.onPause();
         stopMonitor();
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
 
 
         // Inflate the layout for this fragment
@@ -106,8 +116,6 @@ public class WaterLoadFragment extends Fragment {
         LineData lineData = new LineData(dataSet);
         chart.setData(lineData);
         chart.invalidate();
-
-
     }
 
     private class WaterLoadMonitor implements Runnable{
@@ -128,20 +136,20 @@ public class WaterLoadFragment extends Fragment {
 
         @Override
         public void run() {
-            Logger.logI("je monitor le flux du poste "+name);
+            Logger.logI("je monitor le flux du poste "+waterLoad.getName());
 
             try {
-                String received=HttpPostManager.sendPost("load="+name, Constants.URL_GET_CURRENTFLOW);
+                String received=HttpPostManager.sendPost("load="+waterLoad.getName(), Constants.URL_GET_CURRENTFLOW);
 
                 JSONObject jsonObject = new JSONObject(received);
 
-                currentFlow = jsonObject.getInt("current_flow");
+                waterLoad.setCurrentFlow(jsonObject.getInt("current_flow"));
 
 
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        tvDebitValue.setText(""+currentFlow);
+                        tvDebitValue.setText(""+waterLoad.getCurrentFlow());
                     }
                 });
 

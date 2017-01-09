@@ -191,9 +191,13 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
                 listRooms.remove(indexCurrentRoom);
                 listRooms.add(indexCurrentRoom,currentRoom);
 
+
+
                 //Saving water loads and rooms
                 sharedPreferencesManager.saveWaterLoads(listWaterLoads);
                 sharedPreferencesManager.saveRooms(listRooms);
+                sharedPreferencesManager.setMustBeRestarted(true);
+
                 refresh();
             }
         });

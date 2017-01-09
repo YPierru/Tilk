@@ -48,6 +48,7 @@ public class ResumeFragment extends Fragment{
         Logger.logI("Je suis résumé");
     }
 
+
     @Override
     public void onActivityCreated (Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);

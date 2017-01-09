@@ -117,6 +117,17 @@ public class SharedPreferencesManager {
         return prefs.getBoolean(context.getString(R.string.session_checkbox_rooms),false);
     }
 
+    public void setMustBeRestarted(boolean mustBeRestarted){
+        SharedPreferences.Editor editor = getEditor();
+        editor.putBoolean("must_be_restarted",mustBeRestarted);
+        editor.apply();
+    }
+
+    public boolean mustBeRestarted(){
+        SharedPreferences prefs = getSharedPref();
+        return prefs.getBoolean("must_be_restarted",false);
+    }
+
     private SharedPreferences.Editor getEditor(){
 
         return PreferenceManager.getDefaultSharedPreferences(context).edit();

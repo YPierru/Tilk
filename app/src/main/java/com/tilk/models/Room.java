@@ -1,12 +1,13 @@
 package com.tilk.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by YPierru on 07/01/2017.
  */
 
-public class Room {
+public class Room implements Serializable{
 
     private String name;
     private ArrayList<WaterLoad> listWaterLoads;
@@ -46,5 +47,14 @@ public class Room {
 
     public void clearWaterLoads(){
         listWaterLoads.clear();
+    }
+
+    public int getTotalFlow(){
+        int totalFlow=0;
+        for(WaterLoad waterLoad : listWaterLoads){
+            totalFlow+=waterLoad.getCurrentFlow();
+        }
+
+        return totalFlow;
     }
 }
