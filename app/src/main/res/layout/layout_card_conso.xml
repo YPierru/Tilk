@@ -15,7 +15,6 @@ card_view:cardCornerRadius="4dp"
         android:layout_height="match_parent"
         android:orientation="vertical">
         <TextView
-            android:id="@+id/tv_conso_title"
             android:layout_margin="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -33,7 +32,6 @@ card_view:cardCornerRadius="4dp"
             android:padding="10dp">
 
             <TextView
-                android:id="@+id/tv_conso_jour_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/conso_jour"
@@ -44,12 +42,22 @@ card_view:cardCornerRadius="4dp"
                 android:paddingLeft="10dp"/>
 
             <TextView
+                android:id="@+id/tv_label_unit_day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="3dp"
+                android:text="L (+/-%)"
+                android:textSize="20sp"
+                android:textColor="@android:color/background_dark" />
+
+            <TextView
                 android:id="@+id/tv_conso_jour_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0.5 m3 (-10%)"
+                android:text="0.5"
                 android:textSize="20sp"
-                android:layout_alignParentRight="true"
+                android:layout_toLeftOf="@id/tv_label_unit_day"
                 android:textColor="@android:color/background_dark" />
         </RelativeLayout>
         <RelativeLayout
@@ -59,7 +67,6 @@ card_view:cardCornerRadius="4dp"
             android:padding="10dp">
 
             <TextView
-                android:id="@+id/tv_conso_hebdo_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/conso_hebdo"
@@ -68,14 +75,23 @@ card_view:cardCornerRadius="4dp"
                 android:textColor="@android:color/background_dark"
                 android:paddingRight="5dp"
                 android:paddingLeft="10dp"/>
+            <TextView
+                android:id="@+id/tv_label_unit_week"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="3dp"
+                android:text="L (+/-%)"
+                android:textSize="20sp"
+                android:textColor="@android:color/background_dark" />
 
             <TextView
                 android:id="@+id/tv_conso_hebdo_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="3 m3 (-5%)"
+                android:text="3"
                 android:textSize="20sp"
-                android:layout_alignParentRight="true"
+                android:layout_toLeftOf="@id/tv_label_unit_week"
                 android:textColor="@android:color/background_dark" />
         </RelativeLayout>
         <RelativeLayout
@@ -85,7 +101,6 @@ card_view:cardCornerRadius="4dp"
             android:padding="10dp">
 
             <TextView
-                android:id="@+id/tv_conso_mois_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/conso_mois"
@@ -96,12 +111,21 @@ card_view:cardCornerRadius="4dp"
                 android:paddingLeft="10dp"/>
 
             <TextView
+                android:id="@+id/tv_label_unit_month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="3dp"
+                android:text="L (+/-%)"
+                android:textSize="20sp"
+                android:textColor="@android:color/background_dark" />
+            <TextView
                 android:id="@+id/tv_conso_mois_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="15 m3 (+7%)"
+                android:text="15"
                 android:textSize="20sp"
-                android:layout_alignParentRight="true"
+                android:layout_toLeftOf="@id/tv_label_unit_month"
                 android:textColor="@android:color/background_dark" />
         </RelativeLayout>
         <RelativeLayout
@@ -111,7 +135,6 @@ card_view:cardCornerRadius="4dp"
             android:padding="10dp">
 
             <TextView
-                android:id="@+id/tv_conso_annee_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/conso_annuelle"
@@ -120,14 +143,23 @@ card_view:cardCornerRadius="4dp"
                 android:textColor="@android:color/background_dark"
                 android:paddingRight="5dp"
                 android:paddingLeft="10dp"/>
+            <TextView
+                android:id="@+id/tv_label_unit_year"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="3dp"
+                android:text="L (+/-%)"
+                android:textSize="20sp"
+                android:textColor="@android:color/background_dark" />
 
             <TextView
                 android:id="@+id/tv_conso_annee_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="130 m3 (+9%)"
+                android:text="130"
+                android:layout_toLeftOf="@id/tv_label_unit_year"
                 android:textSize="20sp"
-                android:layout_alignParentRight="true"
                 android:textColor="@android:color/background_dark" />
         </RelativeLayout>
     </LinearLayout>

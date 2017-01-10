@@ -8,12 +8,19 @@ import java.io.Serializable;
 
 public class WaterLoad implements Serializable{
 
+    private int id;
     private String name;
     private int status;
     private int currentFlow;
     private boolean inRoom;
+    private int statDay;
+    private int statWeek;
+    private int statMonth;
+    private int statYear;
 
-    public WaterLoad(String name, int status, int currentFlow,boolean inRoom) {
+
+    public WaterLoad(int id,String name, int status, int currentFlow,boolean inRoom) {
+        this.id=id;
         this.name = name;
         this.status = status;
         this.currentFlow = currentFlow;
@@ -50,6 +57,46 @@ public class WaterLoad implements Serializable{
 
     public void setInRoom(boolean inRoom){
         this.inRoom=inRoom;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getStatDay() {
+        return statDay;
+    }
+
+    public void setStatDay(int statDay) {
+        this.statDay = statDay;
+    }
+
+    public int getStatWeek() {
+        return statWeek;
+    }
+
+    public void setStatWeek(int statWeek) {
+        this.statWeek = statWeek;
+    }
+
+    public int getStatMonth() {
+        return statMonth;
+    }
+
+    public void setStatMonth(int statMonth) {
+        this.statMonth = statMonth;
+    }
+
+    public int getStatYear() {
+        return statYear;
+    }
+
+    public void setStatYear(int statYear) {
+        this.statYear = statYear;
     }
 
     @Override

@@ -37,6 +37,10 @@ public class WaterLoadFragment extends Fragment {
     private WaterLoadMonitor waterLoadMonitor;
 
     private TextView tvDebitValue;
+    private TextView tvStatDay;
+    private TextView tvStatWeek;
+    private TextView tvStatMonth;
+    private TextView tvStatYear;
 
 
     public static WaterLoadFragment newInstance(WaterLoad waterLoad){
@@ -99,6 +103,10 @@ public class WaterLoadFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         tvDebitValue = (TextView)getView().findViewById(R.id.tv_debit_value);
+        tvStatDay = (TextView)getView().findViewById(R.id.tv_conso_jour_value);
+        tvStatWeek = (TextView)getView().findViewById(R.id.tv_conso_hebdo_value);
+        tvStatMonth = (TextView)getView().findViewById(R.id.tv_conso_mois_value);
+        tvStatYear = (TextView)getView().findViewById(R.id.tv_conso_annee_value);
 
         LineChart chart = (LineChart) getView().findViewById(R.id.chart_evolution);
         List<Entry> entries = new ArrayList<>();
@@ -139,17 +147,25 @@ public class WaterLoadFragment extends Fragment {
             Logger.logI("je monitor le flux du poste "+waterLoad.getName());
 
             try {
-                String received=HttpPostManager.sendPost("load="+waterLoad.getName(), Constants.URL_GET_CURRENTFLOW);
-
+                String received=HttpPostManager.sendPost("load_id="+waterLoad.getId(), Constants.URL_GET_CURRENTFLOW);
+                //Logger.logI(received);
                 JSONObject jsonObject = new JSONObject(received);
 
                 waterLoad.setCurrentFlow(jsonObject.getInt("current_flow"));
+                waterLoad.setStatDay(jsonObject.getInt("per_day"));
+                waterLoad.setStatWeek(jsonObject.getInt("per_week"));
+                waterLoad.setStatMonth(jsonObject.getInt("per_month"));
+                waterLoad.setStatYear(jsonObject.getInt("per_year"));
 
 
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        tvDebitValue.setText(""+waterLoad.getCurrentFlow());
+                        tvDebitValue.setText(String.valueOf(waterLoad.getCurrentFlow()));
+                        tvStatDay.setText(String.valueOf(waterLoad.getStatDay()));
+                        tvStatWeek.setText(String.valueOf(waterLoad.getStatWeek()));
+                        tvStatMonth.setText(String.valueOf(waterLoad.getStatMonth()));
+                        tvStatYear.setText(String.valueOf(waterLoad.getStatYear()));
                     }
                 });
 

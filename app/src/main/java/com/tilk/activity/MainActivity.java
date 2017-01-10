@@ -83,12 +83,16 @@ public class MainActivity extends AppCompatActivity {
 
         if(sessionManager.mustBeRestarted()){
             sessionManager.setMustBeRestarted(false);
-            Intent i = getBaseContext().getPackageManager()
-                    .getLaunchIntentForPackage( getBaseContext().getPackageName() );
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(i);
+            restartApp();
         }
 
+    }
+
+    private void restartApp(){
+        Intent i = getBaseContext().getPackageManager()
+                .getLaunchIntentForPackage( getBaseContext().getPackageName() );
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(i);
     }
 
 
@@ -183,12 +187,14 @@ public class MainActivity extends AppCompatActivity {
 
                 String name;
                 int status;
+                int id;
 
                 for(int i=0;i<arrayLoads.length();i++){
+                    id = arrayLoads.getJSONObject(i).getInt("id");
                     name = arrayLoads.getJSONObject(i).getString("name");
                     status = Integer.parseInt(arrayLoads.getJSONObject(i).getString("status"));
 
-                    listWaterLoads.add(new WaterLoad(name,status,0,false));
+                    listWaterLoads.add(new WaterLoad(id,name,status,0,false));
                 }
 
 
