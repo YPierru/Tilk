@@ -6,10 +6,12 @@ import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 import com.tilk.R;
+import com.tilk.models.Coordinate;
 import com.tilk.models.Room;
 import com.tilk.models.WaterLoad;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,6 +31,18 @@ public class SharedPreferencesManager {
     public void setUserOnline() {
         SharedPreferences.Editor editor = getEditor();
         editor.putBoolean(Constants.SESSION_STATUS, true);
+        editor.apply();
+    }
+
+    public void setUserId(int id){
+        SharedPreferences.Editor editor = getEditor();
+        editor.putInt(Constants.SESSION_ID_USER,id);
+        editor.apply();
+    }
+
+    public void setTilkId(int id){
+        SharedPreferences.Editor editor = getEditor();
+        editor.putInt(Constants.SESSION_ID_TILK,id);
         editor.apply();
     }
 
@@ -126,6 +140,45 @@ public class SharedPreferencesManager {
     public boolean mustBeRestarted(){
         SharedPreferences prefs = getSharedPref();
         return prefs.getBoolean("must_be_restarted",false);
+    }
+
+    public void setReferenceDate(Date refDate){
+        SharedPreferences.Editor editor = getEditor();
+        editor.putLong("ref_date",refDate.getTime());
+        editor.apply();
+    }
+
+    public Date getReferenceDate(){
+        SharedPreferences prefs = getSharedPref();
+        return new Date(prefs.getLong("ref_date",0));
+    }
+
+    public void saveListHistoric(ArrayList<Coordinate> listHistoric, String roomName){
+        SharedPreferences.Editor editor = getEditor();
+        String json;
+
+        for(int i=0;i<listHistoric.size();i++){
+            json=gson.toJson(listHistoric.get(i));
+            editor.putString(roomName+"_historic"+i,json);
+            editor.apply();
+        }
+
+        editor.putInt(roomName+"_historic_number", listHistoric.size());
+        editor.apply();
+    }
+
+    public ArrayList<Coordinate> getListHistoric(String roomName){
+        SharedPreferences prefs = getSharedPref();
+        ArrayList<Coordinate> listHistoric = new ArrayList<>();
+        String json;
+        int size = prefs.getInt(roomName+"_historic_number",-1);
+
+        for(int i=0;i<size;i++){
+            json = prefs.getString(roomName+"_historic"+i,"");
+            listHistoric.add(gson.fromJson(json,Coordinate.class));
+        }
+
+        return listHistoric;
     }
 
     private SharedPreferences.Editor getEditor(){

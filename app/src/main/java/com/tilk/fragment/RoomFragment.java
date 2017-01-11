@@ -16,6 +16,7 @@ import com.tilk.R;
 import com.tilk.models.Room;
 import com.tilk.models.WaterLoad;
 import com.tilk.utils.Constants;
+import com.tilk.utils.DateTimeUtils;
 import com.tilk.utils.HttpPostManager;
 import com.tilk.utils.Logger;
 import com.tilk.utils.SharedPreferencesManager;
@@ -140,6 +141,7 @@ public class RoomFragment extends Fragment {
 
         public RoomMonitor(){
             executor = Executors.newScheduledThreadPool(1);
+
             StringBuilder jsonBuilder = new StringBuilder();
             jsonBuilder.append("{ \"load_id\" : ");
             jsonBuilder.append("[");
@@ -182,7 +184,8 @@ public class RoomFragment extends Fragment {
                     waterLoad = room.getWaterLoadById(array.getJSONObject(i).getInt("id"));
 
                     waterLoad.setCurrentFlow(array.getJSONObject(i).getInt("current_flow"));
-                    waterLoad.setStatDay(array.getJSONObject(i).getInt("per_day"));
+
+                    waterLoad.addHistoricEntryDay(new Entry(DateTimeUtils.getMinuteSinceMidnight(), jsonObject.getInt("per_day")));
                     waterLoad.setStatWeek(array.getJSONObject(i).getInt("per_week"));
                     waterLoad.setStatMonth(array.getJSONObject(i).getInt("per_month"));
                     waterLoad.setStatYear(array.getJSONObject(i).getInt("per_year"));

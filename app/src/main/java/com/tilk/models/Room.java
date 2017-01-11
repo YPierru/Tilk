@@ -66,7 +66,7 @@ public class Room implements Serializable{
     public int getTotalStatDay(){
         int total=0;
         for(WaterLoad waterLoad : listWaterLoads){
-            total+=waterLoad.getStatDay();
+            total+=waterLoad.getLastHistoricDayInt();
         }
         return total;
     }

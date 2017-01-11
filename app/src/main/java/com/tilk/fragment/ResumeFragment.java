@@ -29,7 +29,7 @@ import java.util.List;
 public class ResumeFragment extends Fragment{
 
     private IAxisValueFormatter formatter;
-    private String[] quarters = new String[] { "0","1","2","Mars","4","5","Juin","7","8","Sept.","10","11", "Déc." };
+    private String[] quarters = new String[] { "Mars","Juin","Sept.", "Déc." };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,7 +71,8 @@ public class ResumeFragment extends Fragment{
 
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return quarters[(int) value];
+                //Logger.logI(""+(int)value/4);
+                return quarters[(int) value/4];
             }
 
         };

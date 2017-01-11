@@ -18,18 +18,21 @@ import com.tilk.utils.SharedPreferencesManager;
 
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 
 public class LoginActivity extends AppCompatActivity {
-
-    private static final int REQUEST_SIGNUP = 0;
-
 
     private EditText etEmailText;
     private EditText etPasswordText;
     private Button btnLogin;
 
-
     private SharedPreferencesManager sessionManager;
+
+    private DateFormat dateFormat;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,15 +72,15 @@ public class LoginActivity extends AppCompatActivity {
         String password = etPasswordText.getText().toString();
 
         LoginCheck loginCheck = new LoginCheck(email,password);
-        boolean logging=false;
+        ArrayList<Integer> listData = new ArrayList<>();
         try {
-            logging = loginCheck.execute().get();
+            listData = loginCheck.execute().get();
         }catch(Exception e){
             e.printStackTrace();
         }
 
-        if(logging){
-            onLoginSuccess();
+        if(listData.get(0)==1){
+            onLoginSuccess(listData.get(1),listData.get(2));
         }else{
             onLoginFailed(getString(R.string.login_failed));
         }
@@ -96,8 +99,20 @@ public class LoginActivity extends AppCompatActivity {
         System.exit(0);
     }
 
-    public void onLoginSuccess() {
+    public void onLoginSuccess(int id_user,int tilk_id) {
+        // today
+        Calendar calendar = new GregorianCalendar();
+        // reset hour, minutes, seconds and millis
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
         sessionManager.setUserOnline();
+        sessionManager.setUserId(id_user);
+        sessionManager.setTilkId(tilk_id);
+        sessionManager.setReferenceDate(calendar.getTime());
+
         startActivity(new Intent(LoginActivity.this,MainActivity.class));
         finish();
     }
@@ -132,7 +147,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-    private class LoginCheck extends AsyncTask<Void,Void,Boolean> {
+    private class LoginCheck extends AsyncTask<Void,Void,ArrayList<Integer>> {
 
         private ProgressDialog progressDialog;
         private String email;
@@ -153,31 +168,27 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         @Override
-        protected Boolean doInBackground(Void... args) {
-            boolean isLoggingOK=false;
+        protected ArrayList<Integer> doInBackground(Void... args) {
+            ArrayList<Integer> listData = new ArrayList<>();
             try {
 
                 String response = HttpPostManager.sendPost("email="+email+"&password="+password,Constants.URL_LOGIN);
 
                 JSONObject jsonObject = new JSONObject(response);
-                int code = jsonObject.getInt("code");
-
-                if(code == Constants.RESPONSE_CODE_OK){
-                    isLoggingOK=true;
-                }else{
-                    isLoggingOK=false;
-                }
+                listData.add(jsonObject.getInt("code"));
+                listData.add(jsonObject.getInt("tilk_id"));
+                listData.add(jsonObject.getInt("id"));
 
 
             }catch(Exception e){
                 e.printStackTrace();
             }
 
-            return isLoggingOK;
+            return listData;
         }
 
         @Override
-        protected void onPostExecute(Boolean result) {
+        protected void onPostExecute(ArrayList<Integer> result) {
             progressDialog.dismiss();
         }
     }
