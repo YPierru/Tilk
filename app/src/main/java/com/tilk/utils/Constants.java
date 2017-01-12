@@ -23,5 +23,6 @@ public class Constants {
     public final static String URL_LOGIN=URL_SERVER+"/login.php";
     public final static String URL_GET_LOADS=URL_SERVER+"/get_loads.php";
     public final static String URL_GET_CURRENTFLOW=URL_SERVER+"/get_currentflow.php";
+    public final static String URL_GET_STATS=URL_SERVER+"/get_stats.php";
 
 }

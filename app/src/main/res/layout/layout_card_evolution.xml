@@ -15,21 +15,74 @@ card_view:cardCornerRadius="4dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <TextView
-            android:id="@+id/tv_evolution_title"
-            android:layout_margin="5dp"
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/evolution_title"
-            android:textSize="36sp"
-            android:textColor="@color/colorPrimary"
-            android:textStyle="normal|bold"
-            android:textAlignment="viewStart"
-            android:paddingTop="5dp"
-            android:paddingLeft="10dp" />
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp">
+            <TextView
+                android:id="@+id/tv_evolution_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/evolution_title"
+                android:textSize="36sp"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="normal|bold"
+                android:textAlignment="viewStart"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true" />
+            <Button
+                android:id="@+id/btn_graph_day"
+                android:text="J"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:layout_marginLeft="60dp"
+                android:layout_centerVertical="true"
+                android:layout_width="25dp"
+                android:layout_height="22dp"
+                android:layout_toRightOf="@id/tv_evolution_title"
+                android:background="@drawable/button_shape" />
+            <Button
+                android:id="@+id/btn_graph_week"
+                android:text="S"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:layout_marginLeft="5dp"
+                android:layout_centerVertical="true"
+                android:layout_width="25dp"
+                android:layout_height="22dp"
+                android:layout_toRightOf="@id/btn_graph_day"
+                android:background="@drawable/button_shape"/>
+            <Button
+                android:id="@+id/btn_graph_month"
+                android:text="M"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:layout_marginLeft="5dp"
+                android:layout_centerVertical="true"
+                android:layout_width="25dp"
+                android:layout_height="22dp"
+                android:layout_toRightOf="@id/btn_graph_week"
+                android:background="@drawable/button_shape" />
+            <Button
+                android:id="@+id/btn_graph_year"
+                android:text="Y"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:layout_marginLeft="5dp"
+                android:layout_centerVertical="true"
+                android:layout_width="25dp"
+                android:layout_height="22dp"
+                android:layout_toRightOf="@id/btn_graph_month"
+                android:background="@drawable/button_shape" />
+        </RelativeLayout>
+
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/chart_evolution"
             android:layout_width="match_parent"
-            android:layout_height="200dp" />
+            android:layout_height="200dp"
+            android:visibility="gone"/>
     </LinearLayout>
 </android.support.v7.widget.CardView>

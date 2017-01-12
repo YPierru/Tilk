@@ -20,8 +20,6 @@ import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -100,18 +98,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onLoginSuccess(int id_user,int tilk_id) {
-        // today
-        Calendar calendar = new GregorianCalendar();
-        // reset hour, minutes, seconds and millis
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-
         sessionManager.setUserOnline();
         sessionManager.setUserId(id_user);
         sessionManager.setTilkId(tilk_id);
-        sessionManager.setReferenceDate(calendar.getTime());
 
         startActivity(new Intent(LoginActivity.this,MainActivity.class));
         finish();

@@ -1,33 +1,28 @@
 package com.tilk.fragment;
 
-import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.tilk.R;
 import com.tilk.models.WaterLoad;
+import com.tilk.utils.ChartBuilder;
 import com.tilk.utils.Constants;
 import com.tilk.utils.DateTimeUtils;
 import com.tilk.utils.HttpPostManager;
 import com.tilk.utils.Logger;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -47,7 +42,12 @@ public class WaterLoadFragment extends Fragment {
     private TextView tvStatWeek;
     private TextView tvStatMonth;
     private TextView tvStatYear;
+    private Button btnShowGraphDay;
+    private Button btnShowGraphWeek;
+    private Button btnShowGraphMonth;
+    private Button btnShowGraphYear;
     private LineChart chart;
+    private ChartBuilder chartBuilder;
 
 
 
@@ -65,15 +65,15 @@ public class WaterLoadFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         waterLoad = (WaterLoad)getArguments().getSerializable("waterload");
+        //Logger.logI("onCreate");
+
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
+        //Logger.logI("onCreateView");
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_poste, container, false);
     }
@@ -97,11 +97,11 @@ public class WaterLoadFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        startMonitor();
+        //Logger.logI("onStart");
+
         waterLoad.retrieveHistoric(getActivity());
-        if(chart!=null){
-            buildChart();
-        }
+
+        startMonitor();
         //Logger.logI("bonjour, de "+waterLoad.getName());
 
     }
@@ -117,106 +117,64 @@ public class WaterLoadFragment extends Fragment {
     public void onActivityCreated (Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
 
+        //Logger.logI("onActivityCreated");
+
         tvDebitValue = (TextView)getView().findViewById(R.id.tv_debit_value);
         tvStatDay = (TextView)getView().findViewById(R.id.tv_conso_jour_value);
         tvStatWeek = (TextView)getView().findViewById(R.id.tv_conso_hebdo_value);
         tvStatMonth = (TextView)getView().findViewById(R.id.tv_conso_mois_value);
         tvStatYear = (TextView)getView().findViewById(R.id.tv_conso_annee_value);
         chart = (LineChart) getView().findViewById(R.id.chart_evolution);
+        btnShowGraphDay = (Button) getView().findViewById(R.id.btn_graph_day);
+        btnShowGraphWeek = (Button) getView().findViewById(R.id.btn_graph_week);
+        btnShowGraphMonth = (Button) getView().findViewById(R.id.btn_graph_month);
+        btnShowGraphYear = (Button) getView().findViewById(R.id.btn_graph_year);
+        final ScrollView svPoste = (ScrollView)getView().findViewById(R.id.sv_poste);
+        chartBuilder = new ChartBuilder(chart);
 
+
+
+        btnShowGraphDay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                chart.setVisibility(View.VISIBLE);
+                new RetrieveGraphValues().execute();
+                svPoste.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        svPoste.fullScroll(ScrollView.FOCUS_DOWN);
+                    }
+                });
+            }
+        });
+
+        btnShowGraphWeek.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                chart.setVisibility(View.GONE);
+            }
+        });
+        btnShowGraphMonth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                chart.setVisibility(View.GONE);
+            }
+        });
+        btnShowGraphYear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                chart.setVisibility(View.GONE);
+            }
+        });
     }
 
     private void buildChart(){
-        //Chart general settings
-        chart.setBackgroundColor(Color.WHITE);
-        chart.setDescription(null);
-        chart.getAxisRight().setEnabled(false);
-        chart.setHighlightPerDragEnabled(false);
-        chart.setHighlightPerTapEnabled(false);
-
-
-        //General YAxis (L) settings
-        YAxis yAxis=chart.getAxisLeft();
-        yAxis.setDrawAxisLine(false);
-        yAxis.setDrawGridLines(false);
-        yAxis.setAxisMinimum(0);
-        yAxis.setAxisMaximum(500);
-
-        //We only display hours, even if the XAxis use minutes
-        final String[] quarters = new String[25];
-
-        for(int i=0;i<quarters.length;i++){
-            quarters[i]=i+"h";
-        }
-
-        IAxisValueFormatter formatter = new IAxisValueFormatter() {
-
+        getActivity().runOnUiThread(new Runnable() {
             @Override
-            public String getFormattedValue(float value, AxisBase axis) {
-                return quarters[(int) value/60];
+            public void run() {
+                chartBuilder.buildGraphDay(waterLoad.getListHistoricStatDay());
             }
-
-        };
-
-        /*final String[] quarters = new String[61];
-
-        for(int i=0;i<quarters.length;i++){
-            quarters[i]=i+"mn";
-        }
-        quarters[60]="1h";
-
-        IAxisValueFormatter formatter = new IAxisValueFormatter() {
-
-            @Override
-            public String getFormattedValue(float value, AxisBase axis) {
-                return quarters[(int) value];
-            }
-
-        };*/
-
-        //General XAxis settings
-        XAxis xAxis=chart.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setDrawAxisLine(false);
-        xAxis.setDrawGridLines(false);
-        xAxis.setAxisMinimum(0);
-        xAxis.setAxisMaximum(1440);
-        //xAxis.setAxisMaximum(60);
-        xAxis.setGranularity(60f);
-        //xAxis.setGranularity(15f);
-        xAxis.setValueFormatter(formatter);
-
-        Logger.logI(""+waterLoad.getListHistoricStatDay().size());
-
-        /*ArrayList<Entry> listEntry = new ArrayList<>();
-
-        Random rand = new Random();
-        for(int i=0;i<=1440;i++){
-            if(i%20==0) {
-                listEntry.add(new Entry(i, rand.nextInt((450 - 50) + 1) + 50));
-            }
-        }*/
-
-
-        LineDataSet dataSet = new LineDataSet(waterLoad.getListHistoricStatDay(), "2015");
-        //LineDataSet dataSet = new LineDataSet(listEntry, "2015");
-        dataSet.setColor(Color.rgb(25,118,210));
-        dataSet.setDrawCircleHole(false);
-        dataSet.setDrawCircles(false);
-        dataSet.setDrawValues(false);
-        dataSet.setHighlightEnabled(false);
-        dataSet.setLineWidth(3f);
-        dataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
-
-
-        List<ILineDataSet> dataSets = new ArrayList<>();
-        dataSets.add(dataSet);
-
-        LineData lineData = new LineData(dataSets);
-
-        chart.setData(lineData);
-
-        chart.invalidate();
+        });
     }
 
     private void updateTextView(){
@@ -229,11 +187,41 @@ public class WaterLoadFragment extends Fragment {
 
     private void updateChart(){
         Logger.logI(""+waterLoad.getLastHistoricDayEntry());
-        chart.getLineData().addEntry(waterLoad.getLastHistoricDayEntry(), 0);
-        chart.notifyDataSetChanged(); // let the chart know it's data changed
-        chart.invalidate();
+        if(chart!=null) {
+            chartBuilder.addDayEntry(waterLoad.getLastHistoricDayEntry());
+        }
     }
 
+    private class RetrieveGraphValues extends AsyncTask<Void,Void,Void>{
+
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                String received = HttpPostManager.sendPost("load_id=" + waterLoad.getId(), Constants.URL_GET_STATS);
+
+                JSONObject jsonObject = new JSONObject(received);
+                JSONArray array = jsonObject.getJSONArray("response");
+
+                int minutes,per_day;
+
+                for(int i=0;i<array.length();i++){
+                    minutes=array.getJSONObject(i).getInt("minutes");
+                    per_day=array.getJSONObject(i).getInt("per_day");
+
+                    waterLoad.addHistoricEntryDay(new Entry(minutes,per_day));
+                }
+
+                buildChart();
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+
+            return null;
+        }
+    }
 
     private class WaterLoadMonitor implements Runnable{
 
@@ -256,7 +244,7 @@ public class WaterLoadFragment extends Fragment {
             //Logger.logI("je monitor le flux du poste "+waterLoad.getName());
 
             try {
-                String received=HttpPostManager.sendPost("load_id="+waterLoad.getId(), Constants.URL_GET_CURRENTFLOW);
+                String received = HttpPostManager.sendPost("load_id=" + waterLoad.getId(), Constants.URL_GET_CURRENTFLOW);
                 //Logger.logI(received);
                 JSONObject jsonObject = new JSONObject(received);
 
@@ -280,6 +268,7 @@ public class WaterLoadFragment extends Fragment {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
         }
     }
 }

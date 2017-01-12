@@ -11,7 +11,6 @@ import com.tilk.models.Room;
 import com.tilk.models.WaterLoad;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -140,17 +139,6 @@ public class SharedPreferencesManager {
     public boolean mustBeRestarted(){
         SharedPreferences prefs = getSharedPref();
         return prefs.getBoolean("must_be_restarted",false);
-    }
-
-    public void setReferenceDate(Date refDate){
-        SharedPreferences.Editor editor = getEditor();
-        editor.putLong("ref_date",refDate.getTime());
-        editor.apply();
-    }
-
-    public Date getReferenceDate(){
-        SharedPreferences prefs = getSharedPref();
-        return new Date(prefs.getLong("ref_date",0));
     }
 
     public void saveListHistoric(ArrayList<Coordinate> listHistoric, String roomName){

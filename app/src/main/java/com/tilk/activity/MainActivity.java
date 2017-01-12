@@ -28,9 +28,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
@@ -65,24 +62,6 @@ public class MainActivity extends AppCompatActivity {
             sessionManager.setFirstRunKO();
         }else{
             listWaterLoads = sessionManager.getWaterLoads();
-        }
-
-        // today
-        Calendar calendar = new GregorianCalendar();
-        // reset hour, minutes, seconds and millis
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-
-        Date currentDay = calendar.getTime();
-        Date referenceDay = sessionManager.getReferenceDate();
-
-        //
-        if(currentDay.compareTo(referenceDay)>0){
-            for(WaterLoad waterLoad : listWaterLoads){
-
-            }
         }
 
 

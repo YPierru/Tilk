@@ -22,14 +22,21 @@
         <activity
             android:name=".activity.SettingsActivity"
             android:label="@string/title_activity_settings" />
-        <activity android:name=".activity.RoomsActivity"
+        <activity
+            android:name=".activity.RoomsActivity"
             android:label="@string/title_activity_rooms"
             android:parentActivityName=".activity.SettingsActivity">
             <intent-filter>
                 <action android:name="com.tilk.activity.RoomsActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".service.MyService"
+            android:enabled="true"
+            android:exported="false"/>
     </application>
 
 </manifest>
