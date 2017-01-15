@@ -66,7 +66,8 @@ public class Room implements Serializable{
     public int getTotalStatDay(){
         int total=0;
         for(WaterLoad waterLoad : listWaterLoads){
-            total+=waterLoad.getLastHistoricDayInt();
+            //total+=waterLoad.getLastHistoricDayInt();
+            total+=waterLoad.getStatsDay().getLastEntryInt();
         }
         return total;
     }
@@ -74,7 +75,7 @@ public class Room implements Serializable{
     public int getTotalStatWeek(){
         int total=0;
         for(WaterLoad waterLoad : listWaterLoads){
-            total+=waterLoad.getStatWeek();
+            //total+=waterLoad.getStatWeek();
         }
         return total;
     }
@@ -82,7 +83,7 @@ public class Room implements Serializable{
     public int getTotalStatMonth(){
         int total=0;
         for(WaterLoad waterLoad : listWaterLoads){
-            total+=waterLoad.getStatMonth();
+            //total+=waterLoad.getStatMonth();
         }
         return total;
     }
@@ -90,7 +91,7 @@ public class Room implements Serializable{
     public int getTotalStatYear(){
         int total=0;
         for(WaterLoad waterLoad : listWaterLoads){
-            total+=waterLoad.getStatYear();
+            //total+=waterLoad.getStatYear();
         }
         return total;
     }

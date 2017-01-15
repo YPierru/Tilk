@@ -116,7 +116,7 @@ public class RoomFragment extends Fragment {
         tvStatMonth = (TextView)getView().findViewById(R.id.tv_conso_mois_value);
         tvStatYear = (TextView)getView().findViewById(R.id.tv_conso_annee_value);
 
-        LineChart chart = (LineChart) getView().findViewById(R.id.chart_evolution);
+        LineChart chart = (LineChart) getView().findViewById(R.id.chart_evolution_day);
         List<Entry> entries = new ArrayList<>();
 
 
@@ -185,10 +185,11 @@ public class RoomFragment extends Fragment {
 
                     waterLoad.setCurrentFlow(array.getJSONObject(i).getInt("current_flow"));
 
-                    waterLoad.addHistoricEntryDay(new Entry(DateTimeUtils.getMinuteSinceMidnight(), jsonObject.getInt("per_day")));
-                    waterLoad.setStatWeek(array.getJSONObject(i).getInt("per_week"));
-                    waterLoad.setStatMonth(array.getJSONObject(i).getInt("per_month"));
-                    waterLoad.setStatYear(array.getJSONObject(i).getInt("per_year"));
+                    //waterLoad.addHistoricEntryDay(new Entry(DateTimeUtils.getMinuteSinceMidnight(), jsonObject.getInt("per_day")));
+                    waterLoad.getStatsDay().addEntry(new Entry(DateTimeUtils.getMinuteSinceMidnight(), jsonObject.getInt("per_day")));
+                    //waterLoad.setStatWeek(array.getJSONObject(i).getInt("per_week"));
+                    //waterLoad.setStatMonth(array.getJSONObject(i).getInt("per_month"));
+                    //waterLoad.setStatYear(array.getJSONObject(i).getInt("per_year"));
                 }
 
 

@@ -23,6 +23,9 @@ public class Constants {
     public final static String URL_LOGIN=URL_SERVER+"/login.php";
     public final static String URL_GET_LOADS=URL_SERVER+"/get_loads.php";
     public final static String URL_GET_CURRENTFLOW=URL_SERVER+"/get_currentflow.php";
-    public final static String URL_GET_STATS=URL_SERVER+"/get_stats.php";
+    public final static String URL_GET_STATS_DAY=URL_SERVER+"/get_stats_day.php";
+    public final static String URL_GET_STATS_WEEK=URL_SERVER+"/get_stats_week.php";
+    public final static String URL_GET_STATS_MONTH=URL_SERVER+"/get_stats_month.php";
+    public final static String URL_GET_STATS_YEAR=URL_SERVER+"/get_stats_year.php";
 
 }

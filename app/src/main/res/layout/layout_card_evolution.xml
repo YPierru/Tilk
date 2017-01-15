@@ -68,7 +68,7 @@ card_view:cardCornerRadius="4dp"
                 android:background="@drawable/button_shape" />
             <Button
                 android:id="@+id/btn_graph_year"
-                android:text="Y"
+                android:text="A"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
                 android:layout_marginLeft="5dp"
@@ -80,7 +80,22 @@ card_view:cardCornerRadius="4dp"
         </RelativeLayout>
 
         <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/chart_evolution"
+            android:id="@+id/chart_evolution_day"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:visibility="gone"/>
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chart_evolution_week"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:visibility="gone"/>
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chart_evolution_month"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:visibility="gone"/>
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chart_evolution_year"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:visibility="gone"/>

@@ -16,7 +16,7 @@ import com.tilk.R;
 import com.tilk.models.WaterLoad;
 import com.tilk.utils.ChartBuilder;
 import com.tilk.utils.Constants;
-import com.tilk.utils.DateTimeUtils;
+import com.tilk.utils.EStatsTypes;
 import com.tilk.utils.HttpPostManager;
 import com.tilk.utils.Logger;
 
@@ -42,13 +42,10 @@ public class WaterLoadFragment extends Fragment {
     private TextView tvStatWeek;
     private TextView tvStatMonth;
     private TextView tvStatYear;
-    private Button btnShowGraphDay;
-    private Button btnShowGraphWeek;
-    private Button btnShowGraphMonth;
-    private Button btnShowGraphYear;
-    private LineChart chart;
+    private LineChart chart_day,chart_week,chart_month, chart_year;
     private ChartBuilder chartBuilder;
 
+    private EStatsTypes selectedStatType;
 
 
     public static WaterLoadFragment newInstance(WaterLoad waterLoad){
@@ -65,16 +62,12 @@ public class WaterLoadFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         waterLoad = (WaterLoad)getArguments().getSerializable("waterload");
-        //Logger.logI("onCreate");
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        //Logger.logI("onCreateView");
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_poste, container, false);
     }
 
@@ -97,20 +90,13 @@ public class WaterLoadFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        //Logger.logI("onStart");
-
-        waterLoad.retrieveHistoric(getActivity());
-
         startMonitor();
-        //Logger.logI("bonjour, de "+waterLoad.getName());
-
     }
 
     @Override
     public void onPause() {
         super.onPause();
         stopMonitor();
-        waterLoad.saveHistoric(getActivity());
     }
 
     @Override
@@ -124,46 +110,46 @@ public class WaterLoadFragment extends Fragment {
         tvStatWeek = (TextView)getView().findViewById(R.id.tv_conso_hebdo_value);
         tvStatMonth = (TextView)getView().findViewById(R.id.tv_conso_mois_value);
         tvStatYear = (TextView)getView().findViewById(R.id.tv_conso_annee_value);
-        chart = (LineChart) getView().findViewById(R.id.chart_evolution);
-        btnShowGraphDay = (Button) getView().findViewById(R.id.btn_graph_day);
-        btnShowGraphWeek = (Button) getView().findViewById(R.id.btn_graph_week);
-        btnShowGraphMonth = (Button) getView().findViewById(R.id.btn_graph_month);
-        btnShowGraphYear = (Button) getView().findViewById(R.id.btn_graph_year);
-        final ScrollView svPoste = (ScrollView)getView().findViewById(R.id.sv_poste);
-        chartBuilder = new ChartBuilder(chart);
+        chart_day = (LineChart)getView().findViewById(R.id.chart_evolution_day);
+        chart_week = (LineChart)getView().findViewById(R.id.chart_evolution_week);
+        chart_month = (LineChart)getView().findViewById(R.id.chart_evolution_month);
+        chart_year = (LineChart)getView().findViewById(R.id.chart_evolution_year);
+        Button btnShowGraphDay = (Button) getView().findViewById(R.id.btn_graph_day);
+        Button btnShowGraphWeek = (Button) getView().findViewById(R.id.btn_graph_week);
+        Button btnShowGraphMonth = (Button) getView().findViewById(R.id.btn_graph_month);
+        Button btnShowGraphYear = (Button) getView().findViewById(R.id.btn_graph_year);
 
 
 
         btnShowGraphDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                chart.setVisibility(View.VISIBLE);
-                new RetrieveGraphValues().execute();
-                svPoste.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        svPoste.fullScroll(ScrollView.FOCUS_DOWN);
-                    }
-                });
+                selectedStatType=EStatsTypes.day;
+                actionButtonGraph();
+
             }
         });
 
         btnShowGraphWeek.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                chart.setVisibility(View.GONE);
+                selectedStatType=EStatsTypes.week;
+                actionButtonGraph();
+
             }
         });
         btnShowGraphMonth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                chart.setVisibility(View.GONE);
+                selectedStatType=EStatsTypes.month;
+                actionButtonGraph();
             }
         });
         btnShowGraphYear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                chart.setVisibility(View.GONE);
+                selectedStatType=EStatsTypes.year;
+                actionButtonGraph();
             }
         });
     }
@@ -172,54 +158,189 @@ public class WaterLoadFragment extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                chartBuilder.buildGraphDay(waterLoad.getListHistoricStatDay());
+                if(selectedStatType==EStatsTypes.day) {
+                    chartBuilder.buildGraphDay(waterLoad.getStatsDay().getListHistoricEntry());
+                }else if(selectedStatType==EStatsTypes.week){
+                    chartBuilder.buildGraphWeek(waterLoad.getStatsWeek().getListHistoricEntry());
+                }else if(selectedStatType==EStatsTypes.month){
+                    chartBuilder.buildGraphMonth(waterLoad.getStatsMonth().getListHistoricEntry());
+                }else if(selectedStatType==EStatsTypes.year){
+                    chartBuilder.buildGraphYear(waterLoad.getStatsYear().getListHistoricEntry());
+                }
+            }
+        });
+    }
+
+    private void setVisibilityAllChartGone(){
+        chart_day.setVisibility(View.GONE);
+        chart_week.setVisibility(View.GONE);
+        chart_month.setVisibility(View.GONE);
+        chart_year.setVisibility(View.GONE);
+    }
+
+    private void actionButtonGraph(){
+        final ScrollView scrollView = (ScrollView) getActivity().findViewById(R.id.sv_poste);
+        setVisibilityAllChartGone();
+        if(chartBuilder!=null){
+            chartBuilder=null;
+        }
+        if(selectedStatType==EStatsTypes.day) {
+            chart_day.setVisibility(View.VISIBLE);
+            chartBuilder = new ChartBuilder(chart_day);
+        }else if(selectedStatType==EStatsTypes.week){
+            chart_week.setVisibility(View.VISIBLE);
+            chartBuilder = new ChartBuilder(chart_week);
+        }else if(selectedStatType==EStatsTypes.month){
+            chart_month.setVisibility(View.VISIBLE);
+            chartBuilder = new ChartBuilder(chart_month);
+        }else if(selectedStatType==EStatsTypes.year){
+            chart_year.setVisibility(View.VISIBLE);
+            chartBuilder = new ChartBuilder(chart_year);
+        }
+        new RetrieveGraphValues().execute();
+
+        scrollView.post(new Runnable() {
+
+            @Override
+            public void run() {
+                scrollView.fullScroll(ScrollView.FOCUS_DOWN);
             }
         });
     }
 
     private void updateTextView(){
         tvDebitValue.setText(String.valueOf(waterLoad.getCurrentFlow()));
-        tvStatDay.setText(String.valueOf(waterLoad.getLastHistoricDayInt()));
-        tvStatWeek.setText(String.valueOf(waterLoad.getStatWeek()));
-        tvStatMonth.setText(String.valueOf(waterLoad.getStatMonth()));
-        tvStatYear.setText(String.valueOf(waterLoad.getStatYear()));
+
+        tvStatDay.setText(String.valueOf(waterLoad.getStatsDay().getLastEntryInt()));
+        tvStatWeek.setText(String.valueOf(waterLoad.getStatsWeek().getLastEntryInt()));
+        tvStatMonth.setText(String.valueOf(waterLoad.getStatsMonth().getLastEntryInt()));
+        tvStatYear.setText(String.valueOf(waterLoad.getStatsYear().getLastEntryInt()));
     }
 
     private void updateChart(){
-        Logger.logI(""+waterLoad.getLastHistoricDayEntry());
-        if(chart!=null) {
-            chartBuilder.addDayEntry(waterLoad.getLastHistoricDayEntry());
+        //Logger.logI(""+waterLoad.getLastHistoricDayEntry());
+
+        if(selectedStatType==EStatsTypes.day && waterLoad.getStatsDay().isEntryAdded()) {
+            chartBuilder.addEntry(waterLoad.getStatsDay().getLastEntry());
+        }else if(selectedStatType==EStatsTypes.week  && waterLoad.getStatsWeek().isEntryAdded()) {
+            chartBuilder.addEntry(waterLoad.getStatsWeek().getLastEntry());
+        }else if(selectedStatType==EStatsTypes.month && waterLoad.getStatsMonth().isEntryAdded()) {
+            chartBuilder.addEntry(waterLoad.getStatsMonth().getLastEntry());
+        }else if(selectedStatType==EStatsTypes.year && waterLoad.getStatsYear().isEntryAdded()) {
+            chartBuilder.addEntry(waterLoad.getStatsYear().getLastEntry());
         }
     }
 
     private class RetrieveGraphValues extends AsyncTask<Void,Void,Void>{
 
-
         @Override
         protected Void doInBackground(Void... voids) {
+            if(selectedStatType==EStatsTypes.day) {
+                dayStatProcess();
+            }else if(selectedStatType==EStatsTypes.week){
+                weekStatProcess();
+            }else if(selectedStatType==EStatsTypes.month){
+                monthStatProcess();
+            }else if(selectedStatType==EStatsTypes.year){
+                yearStatProcess();
+            }
+
+            buildChart();
+
+            return null;
+        }
+
+        private void dayStatProcess(){
             try {
-                String received = HttpPostManager.sendPost("load_id=" + waterLoad.getId(), Constants.URL_GET_STATS);
+                String received = HttpPostManager.sendPost("load_id=" + waterLoad.getId(), Constants.URL_GET_STATS_DAY);
+
+                //Logger.logI(received);
 
                 JSONObject jsonObject = new JSONObject(received);
                 JSONArray array = jsonObject.getJSONArray("response");
 
-                int minutes,per_day;
+                int minutes,cumul;
 
                 for(int i=0;i<array.length();i++){
                     minutes=array.getJSONObject(i).getInt("minutes");
-                    per_day=array.getJSONObject(i).getInt("per_day");
+                    cumul=array.getJSONObject(i).getInt("cumul");
 
-                    waterLoad.addHistoricEntryDay(new Entry(minutes,per_day));
+                    waterLoad.getStatsDay().addEntry(new Entry(minutes,cumul));
                 }
-
-                buildChart();
 
             }catch(Exception e){
                 e.printStackTrace();
             }
+        }
 
+        private void weekStatProcess(){
+            try {
+                String received = HttpPostManager.sendPost("load_id=" + waterLoad.getId(), Constants.URL_GET_STATS_WEEK);
 
-            return null;
+                //Logger.logI(received);
+
+                JSONObject jsonObject = new JSONObject(received);
+                JSONArray array = jsonObject.getJSONArray("response");
+
+                int hours,cumul;
+
+                for(int i=0;i<array.length();i++){
+                    hours=array.getJSONObject(i).getInt("hours");
+                    cumul=array.getJSONObject(i).getInt("cumul");
+
+                    waterLoad.getStatsWeek().addEntry(new Entry(hours,cumul));
+                }
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        private void monthStatProcess(){
+            try {
+                String received = HttpPostManager.sendPost("load_id=" + waterLoad.getId(), Constants.URL_GET_STATS_MONTH);
+
+                //Logger.logI(received);
+
+                JSONObject jsonObject = new JSONObject(received);
+                JSONArray array = jsonObject.getJSONArray("response");
+
+                int hours6,cumul;
+
+                for(int i=0;i<array.length();i++){
+                    hours6=array.getJSONObject(i).getInt("6Hours");
+                    cumul=array.getJSONObject(i).getInt("cumul");
+
+                    waterLoad.getStatsMonth().addEntry(new Entry(hours6,cumul));
+                }
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        private void yearStatProcess(){
+
+            try {
+                String received = HttpPostManager.sendPost("load_id=" + waterLoad.getId(), Constants.URL_GET_STATS_YEAR);
+
+                //Logger.logI(received);
+
+                JSONObject jsonObject = new JSONObject(received);
+                JSONArray array = jsonObject.getJSONArray("response");
+
+                int minutes,cumul;
+
+                for(int i=0;i<array.length();i++){
+                    minutes=array.getJSONObject(i).getInt("days");
+                    cumul=array.getJSONObject(i).getInt("cumul");
+
+                    waterLoad.getStatsYear().addEntry(new Entry(minutes,cumul));
+                }
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
         }
     }
 
@@ -249,12 +370,11 @@ public class WaterLoadFragment extends Fragment {
                 JSONObject jsonObject = new JSONObject(received);
 
                 waterLoad.setCurrentFlow(jsonObject.getInt("current_flow"));
-                waterLoad.addHistoricEntryDay(new Entry(DateTimeUtils.getMinuteSinceMidnight(), jsonObject.getInt("per_day")));
 
-                waterLoad.setStatWeek(jsonObject.getInt("per_week"));
-                waterLoad.setStatMonth(jsonObject.getInt("per_month"));
-                waterLoad.setStatYear(jsonObject.getInt("per_year"));
-
+                waterLoad.getStatsDay().addEntry(new Entry(jsonObject.getInt("dMinutes"), jsonObject.getInt("dCumul")));
+                waterLoad.getStatsWeek().addEntry(new Entry(jsonObject.getInt("wHours"), jsonObject.getInt("wCumul")));
+                waterLoad.getStatsMonth().addEntry(new Entry(jsonObject.getInt("m6Hours"), jsonObject.getInt("mCumul")));
+                waterLoad.getStatsYear().addEntry(new Entry(jsonObject.getInt("yDays"), jsonObject.getInt("yCumul")));
 
                 getActivity().runOnUiThread(new Runnable() {
                     @Override

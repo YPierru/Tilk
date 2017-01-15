@@ -8,10 +8,10 @@ import android.util.Log;
 
 public class Logger {
 
-    private static boolean isLogOn=false;
+    private static boolean isLogOn=true;
 
     public static void logI(String toPrint){
-        if(false) {
+        if(isLogOn) {
             Log.d(Constants.TAG_LOG, toPrint);
         }
     }
