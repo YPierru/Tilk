@@ -1,7 +1,12 @@
 package com.tilk.models;
 
+import com.github.mikephil.charting.data.Entry;
+import com.tilk.utils.EStatsTypes;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by YPierru on 07/01/2017.
@@ -63,36 +68,159 @@ public class Room implements Serializable{
         return totalFlow;
     }
 
-    public int getTotalStatDay(){
+    public int getTotalStat(EStatsTypes statsTypes){
         int total=0;
-        for(WaterLoad waterLoad : listWaterLoads){
-            //total+=waterLoad.getLastHistoricDayInt();
-            total+=waterLoad.getStatsDay().getLastEntryInt();
+        if(statsTypes==EStatsTypes.day) {
+            for(WaterLoad waterLoad : listWaterLoads){
+                total+=waterLoad.getStatsDay().getLastEntryInt();
+            }
+        }else if(statsTypes==EStatsTypes.week){
+            for(WaterLoad waterLoad : listWaterLoads){
+                total+=waterLoad.getStatsWeek().getLastEntryInt();
+            }
+        }else if(statsTypes==EStatsTypes.month){
+            for(WaterLoad waterLoad : listWaterLoads){
+                total+=waterLoad.getStatsMonth().getLastEntryInt();
+            }
+        }else if(statsTypes==EStatsTypes.year){
+            for(WaterLoad waterLoad : listWaterLoads){
+                total+=waterLoad.getStatsYear().getLastEntryInt();
+            }
         }
+
         return total;
     }
 
-    public int getTotalStatWeek(){
-        int total=0;
-        for(WaterLoad waterLoad : listWaterLoads){
-            //total+=waterLoad.getStatWeek();
-        }
-        return total;
+    private ArrayList<Entry> sortListEntry(ArrayList<Entry> listEntry){
+        Collections.sort(listEntry, new Comparator<Entry>() {
+            @Override
+            public int compare(Entry entry1, Entry entry2)
+            {
+                if(entry1.getX()<entry2.getX()){
+                    return -1;
+                }
+
+                if(entry1.getX()==entry2.getX() && entry1.getY()<entry2.getY()){
+                    return -1;
+                }
+
+                if(entry1.getX()==entry2.getX() && entry1.getY()==entry2.getY()){
+                    return 0;
+                }
+
+                if(entry1.getX()==entry2.getX() && entry1.getY()>entry2.getY()){
+                    return 1;
+                }
+
+                if(entry1.getX()>entry2.getX()){
+                    return 1;
+                }
+
+                return 0;
+            }
+        });
+
+        return listEntry;
     }
 
-    public int getTotalStatMonth(){
-        int total=0;
-        for(WaterLoad waterLoad : listWaterLoads){
-            //total+=waterLoad.getStatMonth();
+    public ArrayList<Entry> getEntries(EStatsTypes statsTypes){
+        ArrayList<Entry> listEntry = new ArrayList<>();
+        ArrayList<Entry> listNoDuplicateEntry = new ArrayList<>();
+        Entry tmpEntry;
+
+        //Merging all stats lists according to stat type
+        if(statsTypes==EStatsTypes.day) {
+            for(WaterLoad waterLoad : listWaterLoads){
+                listEntry.addAll(waterLoad.getStatsDay().getListHistoricEntryNoDuplicate());
+            }
+        }else if(statsTypes==EStatsTypes.week){
+            for(WaterLoad waterLoad : listWaterLoads){
+                listEntry.addAll(waterLoad.getStatsWeek().getListHistoricEntryNoDuplicate());
+            }
+        }else if(statsTypes==EStatsTypes.month){
+            for(WaterLoad waterLoad : listWaterLoads){
+                listEntry.addAll(waterLoad.getStatsMonth().getListHistoricEntryNoDuplicate());
+            }
+        }else if(statsTypes==EStatsTypes.year){
+            for(WaterLoad waterLoad : listWaterLoads){
+                listEntry.addAll(waterLoad.getStatsYear().getListHistoricEntryNoDuplicate());
+            }
         }
-        return total;
+
+        //Sort by X
+        listEntry = sortListEntry(listEntry);
+
+        int i=0;
+        while(i<listEntry.size()){
+            tmpEntry=listEntry.get(i);
+
+            while(i+1<listEntry.size() && listEntry.get(i).getX()==listEntry.get(i+1).getX() && listEntry.get(i+1).getY()>= listEntry.get(i).getY() ){
+                tmpEntry=listEntry.get(i+1);
+                i++;
+            }
+            i++;
+            listNoDuplicateEntry.add(tmpEntry);
+        }
+
+        /*for(Entry entry : listNoDuplicateEntry){
+            Logger.logI("coucou "+entry);
+        }*/
+
+        return listNoDuplicateEntry;
+
     }
 
-    public int getTotalStatYear(){
-        int total=0;
-        for(WaterLoad waterLoad : listWaterLoads){
-            //total+=waterLoad.getStatYear();
+    public boolean isEntryAdded(EStatsTypes statsTypes){
+
+        if(statsTypes==EStatsTypes.day) {
+            for (WaterLoad waterLoad : listWaterLoads) {
+                if (waterLoad.getStatsDay().isEntryAdded()) {
+                    return true;
+                }
+            }
+        }else if(statsTypes==EStatsTypes.week){
+            for (WaterLoad waterLoad : listWaterLoads) {
+                if (waterLoad.getStatsWeek().isEntryAdded()) {
+                    return true;
+                }
+            }
+        }else if(statsTypes==EStatsTypes.month){
+            for (WaterLoad waterLoad : listWaterLoads) {
+                if (waterLoad.getStatsMonth().isEntryAdded()) {
+                    return true;
+                }
+            }
+        }else if(statsTypes==EStatsTypes.year){
+            for (WaterLoad waterLoad : listWaterLoads) {
+                if (waterLoad.getStatsYear().isEntryAdded()) {
+                    return true;
+                }
+            }
         }
-        return total;
+
+        return false;
+    }
+
+    public Entry getLastEntry(EStatsTypes statsTypes){
+        ArrayList<Entry> listEntry = getEntries(statsTypes);
+
+        return listEntry.get(listEntry.size()-1);
+    }
+
+    public String getJSONForWaterLoadsID(){
+        StringBuilder jsonBuilder = new StringBuilder();
+        jsonBuilder.append("{ \"load_id\" : ");
+        jsonBuilder.append("[");
+        for(int i=0;i<listWaterLoads.size();i++) {
+            jsonBuilder.append("\""+listWaterLoads.get(i).getId()+"\"");
+
+            if(i+1<listWaterLoads.size()){
+                jsonBuilder.append(",");
+            }
+        }
+        jsonBuilder.append("]");
+        jsonBuilder.append("}");
+
+        return jsonBuilder.toString();
     }
 }

@@ -5,6 +5,8 @@ import com.tilk.models.Coordinate;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 
 /**
@@ -66,6 +68,59 @@ public class StatsManager implements Serializable{
         }
 
         return arrayList;
+    }
+
+    private ArrayList<Entry> sortListEntry(ArrayList<Entry> listEntry){
+        Collections.sort(listEntry, new Comparator<Entry>() {
+            @Override
+            public int compare(Entry entry1, Entry entry2)
+            {
+                if(entry1.getX()<entry2.getX()){
+                    return -1;
+                }
+
+                if(entry1.getX()==entry2.getX() && entry1.getY()<entry2.getY()){
+                    return -1;
+                }
+
+                if(entry1.getX()==entry2.getX() && entry1.getY()==entry2.getY()){
+                    return 0;
+                }
+
+                if(entry1.getX()==entry2.getX() && entry1.getY()>entry2.getY()){
+                    return 1;
+                }
+
+                if(entry1.getX()>entry2.getX()){
+                    return 1;
+                }
+
+                return 0;
+            }
+        });
+
+        return listEntry;
+    }
+
+    public ArrayList<Entry> getListHistoricEntryNoDuplicate(){
+        ArrayList<Entry> listEntry = getListHistoricEntry();
+        ArrayList<Entry> listNoDuplicateEntry = new ArrayList<>();
+        Entry tmpEntry;
+
+        listEntry = sortListEntry(listEntry);
+
+        int i=0;
+        while(i<listEntry.size()){
+            tmpEntry=listEntry.get(i);
+
+            while(i+1<listEntry.size() && listEntry.get(i).getX()==listEntry.get(i+1).getX() && listEntry.get(i+1).getY()>= listEntry.get(i).getY() ){
+                tmpEntry=listEntry.get(i+1);
+                i++;
+            }
+            i++;
+            listNoDuplicateEntry.add(tmpEntry);
+        }
+        return listNoDuplicateEntry;
     }
 
     public int getLastEntryInt(){

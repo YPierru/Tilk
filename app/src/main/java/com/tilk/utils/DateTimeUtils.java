@@ -8,14 +8,6 @@ import java.util.Calendar;
 
 public class DateTimeUtils {
 
-    public static int getMinuteSinceMidnight(){
-        Calendar now = Calendar.getInstance();
-        int hour = now.get(Calendar.HOUR_OF_DAY);
-        int minute = now.get(Calendar.MINUTE);
-
-        return ((hour * 60) + minute);
-    }
-
     public static int getAmountOf6hInCurrentMonth(){
         return getNumberOfDayInMonth() * 4;
     }
@@ -43,7 +35,8 @@ public class DateTimeUtils {
 
     public static String getCurrentMonthName() {
         String[] monthsFrench = {"Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"};
-        return monthsFrench[Calendar.MONTH - 1];
+        Calendar now = Calendar.getInstance();
+        return monthsFrench[now.get(Calendar.MONTH)];
     }
 
 
