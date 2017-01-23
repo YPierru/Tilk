@@ -27,6 +27,12 @@ public class DateTimeUtils {
         return String.valueOf(now.get(Calendar.YEAR));
     }
 
+    public static String getPreviousYear(){
+        Calendar now = Calendar.getInstance();
+        now.add(Calendar.YEAR,-1);
+        return String.valueOf(now.get(Calendar.YEAR));
+    }
+
     public static String getCurrentMonth(){
         String[] months = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
         Calendar now = Calendar.getInstance();
@@ -37,6 +43,16 @@ public class DateTimeUtils {
         String[] monthsFrench = {"Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"};
         Calendar now = Calendar.getInstance();
         return monthsFrench[now.get(Calendar.MONTH)];
+    }
+
+    public static String getPreviousMonthName() {
+        String[] monthsFrench = {"Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"};
+        Calendar now = Calendar.getInstance();
+        if(getCurrentMonth().equals("01")){
+            return monthsFrench[11];
+        }else {
+            return monthsFrench[now.get(Calendar.MONTH)];
+        }
     }
 
 

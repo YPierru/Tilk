@@ -15,6 +15,7 @@ import java.util.Iterator;
 
 public class StatsManager implements Serializable{
 
+    private ArrayList<Coordinate> listHistoricPrevious;
     private ArrayList<Coordinate> listHistoric;
     private boolean entryAdded=false;
 
@@ -27,6 +28,7 @@ public class StatsManager implements Serializable{
 
         //new day, reset the list
         if(listHistoric.size()>0 && coo.getX()<getLastEntry().getX()){
+            listHistoricPrevious=listHistoric;
             listHistoric.clear();
         }
 
@@ -39,11 +41,6 @@ public class StatsManager implements Serializable{
     }
 
     private boolean isInList(Coordinate cooToTest){
-        /*for(Coordinate coo : listHistoric){
-            if(cooToTest.getX()==coo.getX() && cooToTest.getY()==coo.getY()){
-                return true;
-            }
-        }*/
         Iterator<Coordinate> iter = listHistoric.iterator();
         while(iter.hasNext()){
             Coordinate coo = iter.next();
@@ -69,6 +66,21 @@ public class StatsManager implements Serializable{
 
         return arrayList;
     }
+
+    public ArrayList<Entry> getListHistoricPreviousEntry() {
+        ArrayList<Entry> arrayList = new ArrayList<>();
+
+        if(listHistoricPrevious!=null){
+            for(Coordinate coo: listHistoricPrevious){
+                arrayList.add(new Entry(coo.getX(),coo.getY()));
+            }
+            return arrayList;
+        }
+
+
+        return new ArrayList<>();
+    }
+
 
     private ArrayList<Entry> sortListEntry(ArrayList<Entry> listEntry){
         Collections.sort(listEntry, new Comparator<Entry>() {
@@ -104,6 +116,27 @@ public class StatsManager implements Serializable{
 
     public ArrayList<Entry> getListHistoricEntryNoDuplicate(){
         ArrayList<Entry> listEntry = getListHistoricEntry();
+        ArrayList<Entry> listNoDuplicateEntry = new ArrayList<>();
+        Entry tmpEntry;
+
+        listEntry = sortListEntry(listEntry);
+
+        int i=0;
+        while(i<listEntry.size()){
+            tmpEntry=listEntry.get(i);
+
+            while(i+1<listEntry.size() && listEntry.get(i).getX()==listEntry.get(i+1).getX() && listEntry.get(i+1).getY()>= listEntry.get(i).getY() ){
+                tmpEntry=listEntry.get(i+1);
+                i++;
+            }
+            i++;
+            listNoDuplicateEntry.add(tmpEntry);
+        }
+        return listNoDuplicateEntry;
+    }
+
+    public ArrayList<Entry> getListHistoricPreviousEntryNoDuplicate(){
+        ArrayList<Entry> listEntry = getListHistoricPreviousEntry();
         ArrayList<Entry> listNoDuplicateEntry = new ArrayList<>();
         Entry tmpEntry;
 

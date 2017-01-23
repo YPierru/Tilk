@@ -70,22 +70,9 @@ public class Room implements Serializable{
 
     public int getTotalStat(EStatsTypes statsTypes){
         int total=0;
-        if(statsTypes==EStatsTypes.day) {
-            for(WaterLoad waterLoad : listWaterLoads){
-                total+=waterLoad.getStatsDay().getLastEntryInt();
-            }
-        }else if(statsTypes==EStatsTypes.week){
-            for(WaterLoad waterLoad : listWaterLoads){
-                total+=waterLoad.getStatsWeek().getLastEntryInt();
-            }
-        }else if(statsTypes==EStatsTypes.month){
-            for(WaterLoad waterLoad : listWaterLoads){
-                total+=waterLoad.getStatsMonth().getLastEntryInt();
-            }
-        }else if(statsTypes==EStatsTypes.year){
-            for(WaterLoad waterLoad : listWaterLoads){
-                total+=waterLoad.getStatsYear().getLastEntryInt();
-            }
+
+        for(WaterLoad waterLoad : listWaterLoads){
+            total+=waterLoad.getStats(statsTypes).getLastEntryInt();
         }
 
         return total;
@@ -128,24 +115,13 @@ public class Room implements Serializable{
         ArrayList<Entry> listNoDuplicateEntry = new ArrayList<>();
         Entry tmpEntry;
 
+
         //Merging all stats lists according to stat type
-        if(statsTypes==EStatsTypes.day) {
-            for(WaterLoad waterLoad : listWaterLoads){
-                listEntry.addAll(waterLoad.getStatsDay().getListHistoricEntryNoDuplicate());
-            }
-        }else if(statsTypes==EStatsTypes.week){
-            for(WaterLoad waterLoad : listWaterLoads){
-                listEntry.addAll(waterLoad.getStatsWeek().getListHistoricEntryNoDuplicate());
-            }
-        }else if(statsTypes==EStatsTypes.month){
-            for(WaterLoad waterLoad : listWaterLoads){
-                listEntry.addAll(waterLoad.getStatsMonth().getListHistoricEntryNoDuplicate());
-            }
-        }else if(statsTypes==EStatsTypes.year){
-            for(WaterLoad waterLoad : listWaterLoads){
-                listEntry.addAll(waterLoad.getStatsYear().getListHistoricEntryNoDuplicate());
-            }
+        for(WaterLoad waterLoad : listWaterLoads){
+            listEntry.addAll(waterLoad.getStats(statsTypes).getListHistoricEntryNoDuplicate());
         }
+
+
 
         //Sort by X
         listEntry = sortListEntry(listEntry);
@@ -170,31 +146,46 @@ public class Room implements Serializable{
 
     }
 
+    public ArrayList<Entry> getPreviousEntries(EStatsTypes statsTypes){
+        ArrayList<Entry> listEntry = new ArrayList<>();
+        ArrayList<Entry> listNoDuplicateEntry = new ArrayList<>();
+        Entry tmpEntry;
+
+
+        //Merging all stats lists according to stat type
+        for(WaterLoad waterLoad : listWaterLoads){
+            listEntry.addAll(waterLoad.getStats(statsTypes).getListHistoricPreviousEntryNoDuplicate());
+        }
+
+
+
+        //Sort by X
+        listEntry = sortListEntry(listEntry);
+
+        int i=0;
+        while(i<listEntry.size()){
+            tmpEntry=listEntry.get(i);
+
+            while(i+1<listEntry.size() && listEntry.get(i).getX()==listEntry.get(i+1).getX() && listEntry.get(i+1).getY()>= listEntry.get(i).getY() ){
+                tmpEntry=listEntry.get(i+1);
+                i++;
+            }
+            i++;
+            listNoDuplicateEntry.add(tmpEntry);
+        }
+
+        /*for(Entry entry : listNoDuplicateEntry){
+            Logger.logI("coucou "+entry);
+        }*/
+
+        return listNoDuplicateEntry;
+    }
+
     public boolean isEntryAdded(EStatsTypes statsTypes){
 
-        if(statsTypes==EStatsTypes.day) {
-            for (WaterLoad waterLoad : listWaterLoads) {
-                if (waterLoad.getStatsDay().isEntryAdded()) {
-                    return true;
-                }
-            }
-        }else if(statsTypes==EStatsTypes.week){
-            for (WaterLoad waterLoad : listWaterLoads) {
-                if (waterLoad.getStatsWeek().isEntryAdded()) {
-                    return true;
-                }
-            }
-        }else if(statsTypes==EStatsTypes.month){
-            for (WaterLoad waterLoad : listWaterLoads) {
-                if (waterLoad.getStatsMonth().isEntryAdded()) {
-                    return true;
-                }
-            }
-        }else if(statsTypes==EStatsTypes.year){
-            for (WaterLoad waterLoad : listWaterLoads) {
-                if (waterLoad.getStatsYear().isEntryAdded()) {
-                    return true;
-                }
+        for (WaterLoad waterLoad : listWaterLoads) {
+            if (waterLoad.getStats(statsTypes).isEntryAdded()) {
+                return true;
             }
         }
 

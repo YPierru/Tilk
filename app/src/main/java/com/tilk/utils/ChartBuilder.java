@@ -21,22 +21,6 @@ public class ChartBuilder {
 
     private LineChart chart;
 
-    private final int Y_MAX_DAY=500;
-    private final int X_MAX_DAY=1440;
-    private final float X_GRANULARITY_DAY=60f;
-
-    private final int Y_MAX_WEEK=1000;
-    private final int X_MAX_WEEK=168;
-    private final float X_GRANULARITY_WEEK=24f;
-
-    private final int Y_MAX_MONTH=3000;
-    private final int X_MAX_MONTH=DateTimeUtils.getAmountOf6hInCurrentMonth();
-    private final float X_GRANULARITY_MONTH=6f;
-
-    private final int Y_MAX_YEAR=15000;
-    private final int X_MAX_YEAR=DateTimeUtils.getNumberOfDayInYear();
-    private final float X_GRANULARITY_YEAR=60f;
-
 
     public ChartBuilder(LineChart chart) {
         this.chart = chart;
@@ -65,107 +49,84 @@ public class ChartBuilder {
     }
 
     private LineDataSet commonLineDataSetBuild(LineDataSet lineDataSet){
-
-        lineDataSet.setColor(Color.rgb(25,118,210));
         lineDataSet.setDrawCircleHole(false);
         lineDataSet.setDrawCircles(false);
         lineDataSet.setDrawValues(false);
         lineDataSet.setHighlightEnabled(false);
         lineDataSet.setLineWidth(3f);
         lineDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+
         return lineDataSet;
     }
 
+    private LineDataSet commonLineDataSetCurrentBuild(LineDataSet lineDataSet){
 
-    public LineChart buildGraphDay(ArrayList<Entry> listEntry){
+        lineDataSet.setColor(Color.rgb(25,118,210));
 
-        /*for(Entry entry : listEntry){
-            Logger.logI(""+entry);
-        }*/
-
-
-        commonBuild();
-        YAxis yAxis = chart.getAxisLeft();
-        yAxis.setAxisMaximum(Y_MAX_DAY);
-
-        XAxis xAxis = chart.getXAxis();
-        xAxis.setAxisMaximum(X_MAX_DAY);
-        xAxis.setGranularity(X_GRANULARITY_DAY);
-        xAxis.setValueFormatter(getFormatterDay());
-
-        LineDataSet lineDataSet = new LineDataSet(listEntry, "Aujourd'hui");
-        lineDataSet = commonLineDataSetBuild(lineDataSet);
-
-        LineData lineData = new LineData(lineDataSet);
-
-        chart.setData(lineData);
-        refresh();
-
-        return chart;
+        return commonLineDataSetBuild(lineDataSet);
     }
 
+    private LineDataSet commonLineDataSetPreviousBuild(LineDataSet lineDataSet){
 
-    public LineChart buildGraphWeek(ArrayList<Entry> listEntry){
+        lineDataSet.setColor(Color.rgb(99,207,241));
 
-        commonBuild();
-        YAxis yAxis = chart.getAxisLeft();
-        yAxis.setAxisMaximum(Y_MAX_WEEK);
-
-        XAxis xAxis = chart.getXAxis();
-        xAxis.setAxisMaximum(X_MAX_WEEK);
-        xAxis.setGranularity(X_GRANULARITY_WEEK);
-        xAxis.setValueFormatter(getFormatterWeek());
-
-        LineDataSet lineDataSet = new LineDataSet(listEntry, "Cette semaine");
-        lineDataSet = commonLineDataSetBuild(lineDataSet);
-
-        LineData lineData = new LineData(lineDataSet);
-
-        chart.setData(lineData);
-        refresh();
-
-        return chart;
+        return commonLineDataSetBuild(lineDataSet);
     }
 
-
-    public LineChart buildGraphMonth(ArrayList<Entry> listEntry){
-
+    public LineChart buildGraph(ArrayList<Entry> listEntry, ArrayList<Entry> listEntryPrevious, EStatsTypes statsTypes){
         commonBuild();
+        int xMax=0,yMax=0;
+        float xGranularity=0;
+        IAxisValueFormatter formatter=null;
+        String labelCurrent=null,labelPrevious=null;
+
+        if(statsTypes==EStatsTypes.day){
+            xMax=1440;
+            yMax=500;
+            xGranularity=60f;
+            formatter = getFormatterDay();
+            labelCurrent="Aujourd'hui";
+            labelPrevious="Hier";
+        }else if(statsTypes==EStatsTypes.week){
+            xMax=168;
+            yMax=1000;
+            xGranularity=24f;
+            formatter = getFormatterWeek();
+            labelCurrent="Cette semaine";
+            labelPrevious="Semaine dernière";
+        }else if(statsTypes==EStatsTypes.month){
+            xMax=DateTimeUtils.getAmountOf6hInCurrentMonth();
+            yMax=3000;
+            xGranularity=6f;
+            formatter = getFormatterMonth();
+            labelCurrent=DateTimeUtils.getCurrentMonthName();
+            labelPrevious=DateTimeUtils.getPreviousMonthName();
+        }else if(statsTypes==EStatsTypes.year){
+            xMax=DateTimeUtils.getNumberOfDayInYear();
+            yMax=15000;
+            xGranularity=60f;
+            formatter = getFormatterYear();
+            labelCurrent=DateTimeUtils.getCurrentYear();
+            labelPrevious=DateTimeUtils.getPreviousYear();
+        }
+
+
         YAxis yAxis = chart.getAxisLeft();
-        yAxis.setAxisMaximum(Y_MAX_MONTH);
+        yAxis.setAxisMaximum(yMax);
 
         XAxis xAxis = chart.getXAxis();
-        xAxis.setAxisMaximum(X_MAX_MONTH);
-        xAxis.setGranularity(X_GRANULARITY_MONTH);
-        xAxis.setValueFormatter(getFormatterMonth());
+        xAxis.setAxisMaximum(xMax);
+        xAxis.setGranularity(xGranularity);
+        xAxis.setValueFormatter(formatter);
 
-        LineDataSet lineDataSet = new LineDataSet(listEntry, DateTimeUtils.getCurrentMonthName());
-        lineDataSet = commonLineDataSetBuild(lineDataSet);
+        LineDataSet lineDataSet = new LineDataSet(listEntry, labelCurrent);
+        LineDataSet lineDataSetPrevious = new LineDataSet(listEntryPrevious, labelPrevious);
 
-        LineData lineData = new LineData(lineDataSet);
+        lineDataSet = commonLineDataSetCurrentBuild(lineDataSet);
+        lineDataSetPrevious = commonLineDataSetPreviousBuild(lineDataSetPrevious);
 
-        chart.setData(lineData);
-        refresh();
-
-        return chart;
-    }
-
-
-    public LineChart buildGraphYear(ArrayList<Entry> listEntry){
-
-        commonBuild();
-        YAxis yAxis = chart.getAxisLeft();
-        yAxis.setAxisMaximum(Y_MAX_YEAR);
-
-        XAxis xAxis = chart.getXAxis();
-        xAxis.setAxisMaximum(X_MAX_YEAR);
-        xAxis.setGranularity(X_GRANULARITY_YEAR);
-        xAxis.setValueFormatter(getFormatterYear());
-
-        LineDataSet lineDataSet = new LineDataSet(listEntry, DateTimeUtils.getCurrentYear());
-        lineDataSet = commonLineDataSetBuild(lineDataSet);
-
-        LineData lineData = new LineData(lineDataSet);
+        LineData lineData = new LineData(lineDataSetPrevious);
+        lineData.addDataSet(lineDataSet);
 
         chart.setData(lineData);
         refresh();

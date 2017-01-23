@@ -6,12 +6,23 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.view.View;
+import android.widget.CompoundButton;
 
+import com.mikepenz.materialdrawer.AccountHeader;
+import com.mikepenz.materialdrawer.AccountHeaderBuilder;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.interfaces.OnCheckedChangeListener;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SectionDrawerItem;
+import com.mikepenz.materialdrawer.model.SwitchDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.Nameable;
 import com.tilk.R;
 import com.tilk.adapter.ViewPagerAdapter;
 import com.tilk.fragment.ResumeFragment;
@@ -32,6 +43,8 @@ import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
+    private Drawer result = null;
+    private Bundle savedInstanceState;
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -44,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.savedInstanceState=savedInstanceState;
         setContentView(R.layout.activity_main);
         Logger.enableLog();
 
@@ -73,7 +87,160 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabs);
 
         setupViewPager(viewPager);
+        initNavigationDrawer();
 
+    }
+
+    private void initNavigationDrawer(){
+        // Handle Toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //toolbar.setTitle(getString(R.string.app_name));
+        setSupportActionBar(toolbar);
+
+
+        // Create the AccountHeader
+        AccountHeader headerResult = new AccountHeaderBuilder()
+                .withActivity(this)
+                .withCompactStyle(true)
+                .withHeaderBackground(R.drawable.banner)
+                .withSavedInstance(savedInstanceState)
+                .build();
+
+
+        //Create the drawer
+        result = new DrawerBuilder()
+                .withActivity(this)
+                .withHasStableIds(true)
+                .withAccountHeader(headerResult) //set the AccountHeader we created earlier for the header.
+                .withOnDrawerListener(new Drawer.OnDrawerListener() {
+                    @Override
+                    public void onDrawerOpened(View drawerView) {
+
+                    }
+
+                    @Override
+                    public void onDrawerClosed(View drawerView) {
+
+                    }
+
+                    @Override
+                    public void onDrawerSlide(View drawerView, float slideOffset) {
+
+                    }
+                })
+                .addDrawerItems(
+                        new PrimaryDrawerItem()
+                                .withName("Accueil")
+                                .withIcon(R.drawable.ic_logo_tilk)
+                                .withIdentifier(Constants.ID_ITEM_ACCUEIL),
+                        new PrimaryDrawerItem()
+                                .withName("Préférences")
+                                .withIcon(R.drawable.ic_settings_black)
+                                .withIdentifier(Constants.ID_ITEM_SETTINGS),
+                        new PrimaryDrawerItem()
+                                .withName("Déconnexion")
+                                .withIcon(R.drawable.ic_logout_black)
+                                .withIdentifier(Constants.ID_ITEM_LOGOUT),
+                        new SectionDrawerItem()
+                                .withName("CommunauTilk"),
+                        new SwitchDrawerItem()
+                                .withName("Actvier/Désactiver")
+                                .withOnCheckedChangeListener(onCheckedChangeListener)
+                                .withIdentifier(Constants.ID_ITEM_SWITCH_CT),
+                        new PrimaryDrawerItem()
+                                .withName("Mon profil")
+                                .withIcon(R.drawable.ic_my_profil)
+                                .withIdentifier(Constants.ID_ITEM_PROFIL),
+                        new PrimaryDrawerItem()
+                                .withName("Mes amis Tilkeurs")
+                                .withIcon(R.drawable.ic_tilkeurs)
+                                .withIdentifier(Constants.ID_ITEM_TILKEURS),
+                        new PrimaryDrawerItem()
+                                .withName("Se comparer")
+                                .withIcon(R.drawable.ic_compare)
+                                .withIdentifier(Constants.ID_ITEM_COMPARE),
+                        new PrimaryDrawerItem()
+                                .withName("Messagerie")
+                                .withIcon(R.drawable.ic_messages)
+                                .withIdentifier(Constants.ID_ITEM_MESSAGES),
+                        new PrimaryDrawerItem()
+                                .withName("Badges")
+                                .withIcon(R.drawable.ic_badges)
+                                .withIdentifier(Constants.ID_ITEM_BADGES),
+                        new PrimaryDrawerItem()
+                                .withName("Confidentialité")
+                                .withIcon(R.drawable.ic_privacy)
+                                .withIdentifier(Constants.ID_ITEM_PRIVACY)
+                )
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        if (drawerItem instanceof Nameable && drawerItem != null) {
+                            if(drawerItem.getIdentifier()==Constants.ID_ITEM_SETTINGS){
+                                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                            }
+                            else if(drawerItem.getIdentifier()==Constants.ID_ITEM_LOGOUT){
+                                sessionManager.setUserOffline();
+                                finish();
+                            }
+                        }
+
+                        return false;
+                    }
+                })
+                .withSelectedItem(Constants.ID_ITEM_ACCUEIL)
+                .withSavedInstance(savedInstanceState)
+                .build();
+
+        SwitchDrawerItem sdi = (SwitchDrawerItem)result.getDrawerItem(Constants.ID_ITEM_SWITCH_CT);
+        sdi.withChecked(false);
+        result.updateItem(sdi);
+
+        setCommunauTilk(false);
+
+
+
+
+        DrawerLayout drawer = result.getDrawerLayout();
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+
+    }
+
+    private OnCheckedChangeListener onCheckedChangeListener = new OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(IDrawerItem drawerItem, CompoundButton buttonView, boolean isChecked) {
+            setCommunauTilk(isChecked);
+        }
+    };
+
+    private void setCommunauTilk(boolean enable){
+        PrimaryDrawerItem pdi;
+        pdi = (PrimaryDrawerItem) result.getDrawerItem(Constants.ID_ITEM_PROFIL);
+        pdi.withEnabled(enable);
+        result.updateItem(pdi);
+
+        pdi = (PrimaryDrawerItem) result.getDrawerItem(Constants.ID_ITEM_TILKEURS);
+        pdi.withEnabled(enable);
+        result.updateItem(pdi);
+
+        pdi = (PrimaryDrawerItem) result.getDrawerItem(Constants.ID_ITEM_COMPARE);
+        pdi.withEnabled(enable);
+        result.updateItem(pdi);
+
+        pdi = (PrimaryDrawerItem) result.getDrawerItem(Constants.ID_ITEM_MESSAGES);
+        pdi.withEnabled(enable);
+        result.updateItem(pdi);
+
+        pdi = (PrimaryDrawerItem) result.getDrawerItem(Constants.ID_ITEM_BADGES);
+        pdi.withEnabled(enable);
+        result.updateItem(pdi);
+
+        pdi = (PrimaryDrawerItem) result.getDrawerItem(Constants.ID_ITEM_PRIVACY);
+        pdi.withEnabled(enable);
+        result.updateItem(pdi);
     }
 
     @Override
@@ -117,6 +284,8 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
     }
 
+
+/*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -145,7 +314,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     @Override
     public void onBackPressed() {

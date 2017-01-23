@@ -1,5 +1,6 @@
 package com.tilk.models;
 
+import com.tilk.utils.EStatsTypes;
 import com.tilk.utils.StatsManager;
 
 import java.io.Serializable;
@@ -70,20 +71,19 @@ public class WaterLoad implements Serializable{
         this.id = id;
     }
 
-    public StatsManager getStatsDay() {
-        return statsDay;
-    }
+    public StatsManager getStats(EStatsTypes statsTypes){
 
-    public StatsManager getStatsWeek(){
-        return statsWeek;
-    }
+        if(statsTypes==EStatsTypes.day){
+            return statsDay;
+        }else if(statsTypes==EStatsTypes.week){
+            return statsWeek;
+        }else if(statsTypes==EStatsTypes.month){
+            return statsMonth;
+        }else if(statsTypes==EStatsTypes.year){
+            return statsYear;
+        }
 
-    public StatsManager getStatsMonth() {
-        return statsMonth;
-    }
-
-    public StatsManager getStatsYear() {
-        return statsYear;
+        return null;
     }
 
     @Override

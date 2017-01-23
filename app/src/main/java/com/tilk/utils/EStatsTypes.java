@@ -5,8 +5,9 @@ package com.tilk.utils;
  */
 
 public enum EStatsTypes {
+    none,
     day,
     week,
     month,
-    year;
+    year
 }

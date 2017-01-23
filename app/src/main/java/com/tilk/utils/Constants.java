@@ -28,4 +28,15 @@ public class Constants {
     public final static String URL_GET_STATS_MONTH=URL_SERVER+"/get_stats_month.php";
     public final static String URL_GET_STATS_YEAR=URL_SERVER+"/get_stats_year.php";
 
+    public final static int ID_ITEM_ACCUEIL=1;
+    public final static int ID_ITEM_SETTINGS=2;
+    public final static int ID_ITEM_LOGOUT=3;
+    public final static int ID_ITEM_SWITCH_CT=4;
+    public final static int ID_ITEM_PROFIL=5;
+    public final static int ID_ITEM_TILKEURS=6;
+    public final static int ID_ITEM_COMPARE=7;
+    public final static int ID_ITEM_MESSAGES=8;
+    public final static int ID_ITEM_BADGES=9;
+    public final static int ID_ITEM_PRIVACY=10;
+
 }

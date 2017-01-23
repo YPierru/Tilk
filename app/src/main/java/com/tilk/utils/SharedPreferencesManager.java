@@ -6,7 +6,6 @@ import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 import com.tilk.R;
-import com.tilk.models.Coordinate;
 import com.tilk.models.Room;
 import com.tilk.models.WaterLoad;
 
@@ -141,7 +140,7 @@ public class SharedPreferencesManager {
         return prefs.getBoolean("must_be_restarted",false);
     }
 
-    public void saveListHistoric(ArrayList<Coordinate> listHistoric, String roomName){
+    /*public void saveListHistoric(ArrayList<Coordinate> listHistoric, String roomName){
         SharedPreferences.Editor editor = getEditor();
         String json;
 
@@ -167,7 +166,7 @@ public class SharedPreferencesManager {
         }
 
         return listHistoric;
-    }
+    }*/
 
     private SharedPreferences.Editor getEditor(){
 

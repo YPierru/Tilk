@@ -46,7 +46,7 @@ public class RoomFragment extends Fragment {
     private TextView tvStatYear;
     private LineChart chart_day,chart_week,chart_month, chart_year;
     private ChartBuilder chartBuilder;
-    private EStatsTypes selectedStatType;
+    private EStatsTypes selectedStatType=EStatsTypes.none;
 
     public static RoomFragment newInstance(Room room){
         RoomFragment roomFragment = new RoomFragment();
@@ -165,7 +165,11 @@ public class RoomFragment extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(selectedStatType==EStatsTypes.day) {
+
+                chartBuilder.buildGraph(room.getEntries(selectedStatType),room.getPreviousEntries(selectedStatType),selectedStatType);
+
+
+                /*if(selectedStatType==EStatsTypes.day) {
                     chartBuilder.buildGraphDay(room.getEntries(selectedStatType));
                 }else if(selectedStatType==EStatsTypes.week){
                     chartBuilder.buildGraphWeek(room.getEntries(selectedStatType));
@@ -173,7 +177,7 @@ public class RoomFragment extends Fragment {
                     chartBuilder.buildGraphMonth(room.getEntries(selectedStatType));
                 }else if(selectedStatType==EStatsTypes.year){
                     chartBuilder.buildGraphYear(room.getEntries(selectedStatType));
-                }
+                }*/
             }
         });
     }
@@ -228,7 +232,7 @@ public class RoomFragment extends Fragment {
     private void updateChart(){
         //Logger.logI(""+waterLoad.getLastHistoricDayEntry());
 
-        if(room.isEntryAdded(selectedStatType)){
+        if(selectedStatType!=EStatsTypes.none && room.isEntryAdded(selectedStatType)){
             chartBuilder.addEntry(room.getLastEntry(selectedStatType));
         }
     }
@@ -269,7 +273,7 @@ public class RoomFragment extends Fragment {
                         minutes=array.getJSONObject(i).getInt("minutes");
                         cumul=array.getJSONObject(i).getInt("cumul");
 
-                        waterLoad.getStatsDay().addEntry(new Entry(minutes,cumul));
+                        waterLoad.getStats(selectedStatType).addEntry(new Entry(minutes,cumul));
                     }
                 }
 
@@ -295,7 +299,7 @@ public class RoomFragment extends Fragment {
                         minutes=array.getJSONObject(i).getInt("hours");
                         cumul=array.getJSONObject(i).getInt("cumul");
 
-                        waterLoad.getStatsWeek().addEntry(new Entry(minutes,cumul));
+                        waterLoad.getStats(selectedStatType).addEntry(new Entry(minutes,cumul));
                     }
                 }
 
@@ -321,7 +325,7 @@ public class RoomFragment extends Fragment {
                         minutes=array.getJSONObject(i).getInt("6Hours");
                         cumul=array.getJSONObject(i).getInt("cumul");
 
-                        waterLoad.getStatsMonth().addEntry(new Entry(minutes,cumul));
+                        waterLoad.getStats(selectedStatType).addEntry(new Entry(minutes,cumul));
                     }
                 }
 
@@ -347,7 +351,7 @@ public class RoomFragment extends Fragment {
                         minutes=array.getJSONObject(i).getInt("days");
                         cumul=array.getJSONObject(i).getInt("cumul");
 
-                        waterLoad.getStatsYear().addEntry(new Entry(minutes,cumul));
+                        waterLoad.getStats(selectedStatType).addEntry(new Entry(minutes,cumul));
                     }
                 }
 
@@ -393,10 +397,10 @@ public class RoomFragment extends Fragment {
 
                     waterLoad.setCurrentFlow(array.getJSONObject(i).getInt("current_flow"));
 
-                    waterLoad.getStatsDay().addEntry(new Entry(array.getJSONObject(i).getInt("dMinutes"), array.getJSONObject(i).getInt("dCumul")));
-                    waterLoad.getStatsWeek().addEntry(new Entry(array.getJSONObject(i).getInt("wHours"), array.getJSONObject(i).getInt("wCumul")));
-                    waterLoad.getStatsMonth().addEntry(new Entry(array.getJSONObject(i).getInt("m6Hours"), array.getJSONObject(i).getInt("mCumul")));
-                    waterLoad.getStatsYear().addEntry(new Entry(array.getJSONObject(i).getInt("yDays"), array.getJSONObject(i).getInt("yCumul")));
+                    waterLoad.getStats(EStatsTypes.day).addEntry(new Entry(array.getJSONObject(i).getInt("dMinutes"), array.getJSONObject(i).getInt("dCumul")));
+                    waterLoad.getStats(EStatsTypes.week).addEntry(new Entry(array.getJSONObject(i).getInt("wHours"), array.getJSONObject(i).getInt("wCumul")));
+                    waterLoad.getStats(EStatsTypes.month).addEntry(new Entry(array.getJSONObject(i).getInt("m6Hours"), array.getJSONObject(i).getInt("mCumul")));
+                    waterLoad.getStats(EStatsTypes.year).addEntry(new Entry(array.getJSONObject(i).getInt("yDays"), array.getJSONObject(i).getInt("yCumul")));
                 }
 
                 getActivity().runOnUiThread(new Runnable() {
