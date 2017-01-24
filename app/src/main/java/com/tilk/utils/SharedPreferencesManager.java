@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 import com.tilk.R;
+import com.tilk.models.ProfilTilkeur;
 import com.tilk.models.Room;
 import com.tilk.models.WaterLoad;
 
@@ -32,10 +33,67 @@ public class SharedPreferencesManager {
         editor.apply();
     }
 
+    public void setUserEmail(String email){
+        SharedPreferences.Editor editor = getEditor();
+        editor.putString(Constants.SESSION_EMAIL_USER,email);
+        editor.apply();
+    }
+
+    public String getEmailUser(){
+        SharedPreferences prefs = getSharedPref();
+        return prefs.getString(Constants.SESSION_EMAIL_USER,"");
+    }
+
+    public void setUserSurname(String surname){
+        SharedPreferences.Editor editor = getEditor();
+        editor.putString(Constants.SESSION_SURNAME_USER,surname);
+        editor.apply();
+    }
+
+    public String getUserSurname(){
+        SharedPreferences prefs = getSharedPref();
+        return prefs.getString(Constants.SESSION_SURNAME_USER,"");
+    }
+
     public void setUserId(int id){
         SharedPreferences.Editor editor = getEditor();
         editor.putInt(Constants.SESSION_ID_USER,id);
         editor.apply();
+    }
+
+    public int getUserId(){
+        SharedPreferences prefs = getSharedPref();
+        return prefs.getInt(Constants.SESSION_ID_USER,-1);
+    }
+
+    public void setCommunautilkStatus(boolean status){
+        SharedPreferences.Editor editor = getEditor();
+        editor.putBoolean(Constants.SESSION_CT_STATUS,status);
+        editor.apply();
+    }
+
+    public boolean getFirstCommunautilk(){
+        SharedPreferences prefs = getSharedPref();
+        return prefs.getBoolean(Constants.SESSION_CT_FIRSTUSE,true);
+    }
+
+    public void setFirstCommunautilk(boolean firstCommunauTilk){
+        SharedPreferences.Editor editor = getEditor();
+        editor.putBoolean(Constants.SESSION_CT_FIRSTUSE,firstCommunauTilk);
+        editor.apply();
+    }
+
+    public void setProfilTilkeur(ProfilTilkeur profil){
+        SharedPreferences.Editor editor = getEditor();
+        String json=gson.toJson(profil);
+        editor.putString(Constants.SESSION_CT_PROFIL,json);
+        editor.apply();
+    }
+
+    public ProfilTilkeur getProfilTilkeur(){
+        SharedPreferences prefs = getSharedPref();
+        String json=prefs.getString(Constants.SESSION_CT_PROFIL,"");
+        return gson.fromJson(json,ProfilTilkeur.class);
     }
 
     public void setTilkId(int id){
@@ -139,34 +197,6 @@ public class SharedPreferencesManager {
         SharedPreferences prefs = getSharedPref();
         return prefs.getBoolean("must_be_restarted",false);
     }
-
-    /*public void saveListHistoric(ArrayList<Coordinate> listHistoric, String roomName){
-        SharedPreferences.Editor editor = getEditor();
-        String json;
-
-        for(int i=0;i<listHistoric.size();i++){
-            json=gson.toJson(listHistoric.get(i));
-            editor.putString(roomName+"_historic"+i,json);
-            editor.apply();
-        }
-
-        editor.putInt(roomName+"_historic_number", listHistoric.size());
-        editor.apply();
-    }
-
-    public ArrayList<Coordinate> getListHistoric(String roomName){
-        SharedPreferences prefs = getSharedPref();
-        ArrayList<Coordinate> listHistoric = new ArrayList<>();
-        String json;
-        int size = prefs.getInt(roomName+"_historic_number",-1);
-
-        for(int i=0;i<size;i++){
-            json = prefs.getString(roomName+"_historic"+i,"");
-            listHistoric.add(gson.fromJson(json,Coordinate.class));
-        }
-
-        return listHistoric;
-    }*/
 
     private SharedPreferences.Editor getEditor(){
 

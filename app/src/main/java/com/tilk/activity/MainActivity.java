@@ -1,6 +1,8 @@
 package com.tilk.activity;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,6 +21,7 @@ import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.interfaces.OnCheckedChangeListener;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.SwitchDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
@@ -97,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
         //toolbar.setTitle(getString(R.string.app_name));
         setSupportActionBar(toolbar);
 
+        Logger.logI(sessionManager.getUserSurname());
 
         // Create the AccountHeader
         AccountHeader headerResult = new AccountHeaderBuilder()
@@ -104,6 +108,10 @@ public class MainActivity extends AppCompatActivity {
                 .withCompactStyle(true)
                 .withHeaderBackground(R.drawable.banner)
                 .withSavedInstance(savedInstanceState)
+                .addProfiles(
+                        new ProfileDrawerItem().withName(sessionManager.getUserSurname()).withEmail(sessionManager.getEmailUser())
+                )
+                .withSelectionListEnabled(false)
                 .build();
 
 
@@ -136,39 +144,48 @@ public class MainActivity extends AppCompatActivity {
                         new PrimaryDrawerItem()
                                 .withName("Préférences")
                                 .withIcon(R.drawable.ic_settings_black)
+                                .withSelectable(false)
                                 .withIdentifier(Constants.ID_ITEM_SETTINGS),
                         new PrimaryDrawerItem()
                                 .withName("Déconnexion")
                                 .withIcon(R.drawable.ic_logout_black)
+                                .withSelectable(false)
                                 .withIdentifier(Constants.ID_ITEM_LOGOUT),
                         new SectionDrawerItem()
                                 .withName("CommunauTilk"),
                         new SwitchDrawerItem()
-                                .withName("Actvier/Désactiver")
+                                .withName("Activer/Désactiver")
+                                .withSelectable(false)
                                 .withOnCheckedChangeListener(onCheckedChangeListener)
                                 .withIdentifier(Constants.ID_ITEM_SWITCH_CT),
                         new PrimaryDrawerItem()
                                 .withName("Mon profil")
+                                .withSelectable(false)
                                 .withIcon(R.drawable.ic_my_profil)
                                 .withIdentifier(Constants.ID_ITEM_PROFIL),
                         new PrimaryDrawerItem()
                                 .withName("Mes amis Tilkeurs")
+                                .withSelectable(false)
                                 .withIcon(R.drawable.ic_tilkeurs)
                                 .withIdentifier(Constants.ID_ITEM_TILKEURS),
                         new PrimaryDrawerItem()
                                 .withName("Se comparer")
+                                .withSelectable(false)
                                 .withIcon(R.drawable.ic_compare)
                                 .withIdentifier(Constants.ID_ITEM_COMPARE),
                         new PrimaryDrawerItem()
                                 .withName("Messagerie")
+                                .withSelectable(false)
                                 .withIcon(R.drawable.ic_messages)
                                 .withIdentifier(Constants.ID_ITEM_MESSAGES),
                         new PrimaryDrawerItem()
                                 .withName("Badges")
+                                .withSelectable(false)
                                 .withIcon(R.drawable.ic_badges)
                                 .withIdentifier(Constants.ID_ITEM_BADGES),
                         new PrimaryDrawerItem()
                                 .withName("Confidentialité")
+                                .withSelectable(false)
                                 .withIcon(R.drawable.ic_privacy)
                                 .withIdentifier(Constants.ID_ITEM_PRIVACY)
                 )
@@ -182,6 +199,11 @@ public class MainActivity extends AppCompatActivity {
                             else if(drawerItem.getIdentifier()==Constants.ID_ITEM_LOGOUT){
                                 sessionManager.setUserOffline();
                                 finish();
+                            }
+                            else if(drawerItem.getIdentifier()==Constants.ID_ITEM_PROFIL){
+                                Intent intent = new Intent(MainActivity.this,ProfilActivity.class);
+                                intent.putExtra("edit_mode",false);
+                                startActivity(intent);
                             }
                         }
 
@@ -198,9 +220,6 @@ public class MainActivity extends AppCompatActivity {
 
         setCommunauTilk(false);
 
-
-
-
         DrawerLayout drawer = result.getDrawerLayout();
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -212,7 +231,39 @@ public class MainActivity extends AppCompatActivity {
     private OnCheckedChangeListener onCheckedChangeListener = new OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(IDrawerItem drawerItem, CompoundButton buttonView, boolean isChecked) {
-            setCommunauTilk(isChecked);
+
+
+            if(sessionManager.getFirstCommunautilk()){
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Bienvenue dans la CommunauTilk !")
+                        .setMessage("C'est votre première venue dans la CommunauTilk, avant tout il vous faut créer un profil de Tilkeur !")
+                        .setNeutralButton("Annuler", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                setCommunauTilk(false);
+                                sessionManager.setCommunautilkStatus(false);
+                            }
+                        })
+                        .setPositiveButton("Créer mon profil", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                setCommunauTilk(true);
+                                sessionManager.setCommunautilkStatus(true);
+                                sessionManager.setFirstCommunautilk(false);
+                                Intent intent = new Intent(MainActivity.this,ProfilActivity.class);
+                                intent.putExtra("edit_mode",true);
+                                startActivity(intent);
+                            }
+                        })
+                        .setCancelable(false)
+                        .setIcon(R.drawable.ic_help)
+                        .show();
+            }else{
+                setCommunauTilk(isChecked);
+                sessionManager.setCommunautilkStatus(isChecked);
+            }
+
+
         }
     };
 

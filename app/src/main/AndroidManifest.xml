@@ -36,7 +36,9 @@
         <service
             android:name=".service.MyService"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false" />
+
+        <activity android:name=".activity.ProfilActivity"></activity>
     </application>
 
 </manifest>

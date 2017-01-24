@@ -17,7 +17,12 @@ public class Constants {
     public final static String SESSION_ROOM="room";
     public final static String SESSION_NUMBER_ROOMS="number_rooms";
     public final static String SESSION_ID_USER="id_user";
+    public final static String SESSION_EMAIL_USER="email_user";
+    public final static String SESSION_SURNAME_USER="surname_user";
     public final static String SESSION_ID_TILK="id_tilk";
+    public final static String SESSION_CT_FIRSTUSE="communautilk_firstuse";
+    public final static String SESSION_CT_STATUS="communautilk_status";
+    public final static String SESSION_CT_PROFIL="communautilk_profil";
 
     private final static String URL_SERVER="http://tilk.laurentjerber.com";
     public final static String URL_LOGIN=URL_SERVER+"/login.php";
@@ -27,6 +32,8 @@ public class Constants {
     public final static String URL_GET_STATS_WEEK=URL_SERVER+"/get_stats_week.php";
     public final static String URL_GET_STATS_MONTH=URL_SERVER+"/get_stats_month.php";
     public final static String URL_GET_STATS_YEAR=URL_SERVER+"/get_stats_year.php";
+    public final static String URL_UPDATE_PROFIL=URL_SERVER+"/update_profil.php";
+    public final static String URL_GET_PROFIL=URL_SERVER+"/get_profil.php";
 
     public final static int ID_ITEM_ACCUEIL=1;
     public final static int ID_ITEM_SETTINGS=2;

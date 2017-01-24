@@ -11,15 +11,13 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.tilk.R;
+import com.tilk.models.ProfilTilkeur;
 import com.tilk.utils.Constants;
 import com.tilk.utils.HttpPostManager;
 import com.tilk.utils.Logger;
 import com.tilk.utils.SharedPreferencesManager;
 
 import org.json.JSONObject;
-
-import java.text.DateFormat;
-import java.util.ArrayList;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -30,7 +28,16 @@ public class LoginActivity extends AppCompatActivity {
 
     private SharedPreferencesManager sessionManager;
 
-    private DateFormat dateFormat;
+    private String email;
+    private int returnCode;
+    private int id_tilk;
+    private int id_user;
+    private String surname;
+    private int ctStatus;
+    private String ctDpt;
+    private String ctPseudo;
+    private int ctNbAdults;
+    private int ctNbKids;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,28 +69,13 @@ public class LoginActivity extends AppCompatActivity {
     public void login() {
 
         if (!validate()) {
-            onLoginFailed(getString(R.string.login_bad_format));
+            onLoginFailed(getString(R.string.login_bad_format),null);
             return;
         }
 
-        String email = etEmailText.getText().toString();
-        String password = etPasswordText.getText().toString();
+        email = etEmailText.getText().toString();
 
-        LoginCheck loginCheck = new LoginCheck(email,password);
-        ArrayList<Integer> listData = new ArrayList<>();
-        try {
-            listData = loginCheck.execute().get();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-
-        if(listData.get(0)==1){
-            onLoginSuccess(listData.get(1),listData.get(2));
-        }else{
-            onLoginFailed(getString(R.string.login_failed));
-        }
-
-
+        new LoginCheck().execute();
     }
 
     @Override
@@ -97,16 +89,25 @@ public class LoginActivity extends AppCompatActivity {
         System.exit(0);
     }
 
-    public void onLoginSuccess(int id_user,int tilk_id) {
+    public void onLoginSuccess(ProgressDialog progressDialog) {
         sessionManager.setUserOnline();
+        sessionManager.setUserEmail(email);
         sessionManager.setUserId(id_user);
-        sessionManager.setTilkId(tilk_id);
+        sessionManager.setTilkId(id_tilk);
+        sessionManager.setUserSurname(surname);
+        if(ctStatus==1) {
+            sessionManager.setProfilTilkeur(new ProfilTilkeur(ctPseudo,ctDpt,ctNbAdults,ctNbKids));
+        }
 
+        progressDialog.dismiss();
         startActivity(new Intent(LoginActivity.this,MainActivity.class));
         finish();
     }
 
-    public void onLoginFailed(String toPrint) {
+    public void onLoginFailed(String toPrint,ProgressDialog progressDialog) {
+        if(progressDialog!=null) {
+            progressDialog.dismiss();
+        }
         Toast.makeText(getBaseContext(), toPrint, Toast.LENGTH_LONG).show();
     }
 
@@ -136,15 +137,13 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-    private class LoginCheck extends AsyncTask<Void,Void,ArrayList<Integer>> {
+    private class LoginCheck extends AsyncTask<Void,Void,Void> {
 
         private ProgressDialog progressDialog;
-        private String email;
         private String password;
 
-        public LoginCheck(String email, String password){
-            this.email=email;
-            this.password=password;
+        public LoginCheck() {
+            this.password = etPasswordText.getText().toString();
         }
 
         @Override
@@ -157,28 +156,35 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         @Override
-        protected ArrayList<Integer> doInBackground(Void... args) {
-            ArrayList<Integer> listData = new ArrayList<>();
+        protected Void doInBackground(Void... args) {
             try {
 
-                String response = HttpPostManager.sendPost("email="+email+"&password="+password,Constants.URL_LOGIN);
+                String response = HttpPostManager.sendPost("email=" + email + "&password=" + password, Constants.URL_LOGIN);
 
                 JSONObject jsonObject = new JSONObject(response);
-                listData.add(jsonObject.getInt("code"));
-                listData.add(jsonObject.getInt("tilk_id"));
-                listData.add(jsonObject.getInt("id"));
+                returnCode = jsonObject.getInt("code");
+
+                if (returnCode == 1) {
+                    id_tilk = jsonObject.getInt("id_tilk");
+                    id_user = jsonObject.getInt("id_user");
+                    surname = jsonObject.getString("surname");
+                    ctStatus = jsonObject.getInt("ct_status");
+                    ctPseudo = jsonObject.getString("ct_pseudo");
+                    ctDpt = jsonObject.getString("ct_dpt");
+                    ctNbAdults = jsonObject.getInt("ct_nbAdults");
+                    ctNbKids = jsonObject.getInt("ct_nbKids");
+
+                    onLoginSuccess(progressDialog);
+                } else {
+                    onLoginFailed(getString(R.string.login_failed), progressDialog);
+                }
 
 
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            return listData;
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<Integer> result) {
-            progressDialog.dismiss();
+            return null;
         }
     }
 }
