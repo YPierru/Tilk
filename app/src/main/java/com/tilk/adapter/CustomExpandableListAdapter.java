@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.tilk.R;
 import com.tilk.models.Room;
 import com.tilk.models.WaterLoad;
-import com.tilk.utils.SharedPreferencesManager;
+import com.tilk.models.UserProfil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,10 +29,10 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
     private Context context;
     private List<String> listRoomsName;
     private HashMap<String, List<String>> mapRoomsNameLoadsName;
-    private SharedPreferencesManager sharedPreferencesManager;
+    private UserProfil sharedPreferencesManager;
     private Button btnAddLoad;
 
-    public CustomExpandableListAdapter(Context context, SharedPreferencesManager sharedPreferencesManager, List<String> expandableListTitle, HashMap<String, List<String>> expandableListDetail) {
+    public CustomExpandableListAdapter(Context context, UserProfil sharedPreferencesManager, List<String> expandableListTitle, HashMap<String, List<String>> expandableListDetail) {
         this.context = context;
         this.listRoomsName = expandableListTitle;
         this.mapRoomsNameLoadsName = expandableListDetail;

@@ -27,16 +27,18 @@ import com.mikepenz.materialdrawer.model.SwitchDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.Nameable;
 import com.tilk.R;
+import com.tilk.activity.communautilk.FriendActivity;
+import com.tilk.activity.communautilk.ProfilActivity;
 import com.tilk.adapter.ViewPagerAdapter;
 import com.tilk.fragment.ResumeFragment;
 import com.tilk.fragment.RoomFragment;
 import com.tilk.fragment.WaterLoadFragment;
 import com.tilk.models.Room;
+import com.tilk.models.UserProfil;
 import com.tilk.models.WaterLoad;
 import com.tilk.utils.Constants;
 import com.tilk.utils.HttpPostManager;
 import com.tilk.utils.Logger;
-import com.tilk.utils.SharedPreferencesManager;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -53,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private ViewPagerAdapter adapter;
 
-    private SharedPreferencesManager sessionManager;
+    private UserProfil userProfil;
 
     private ArrayList<WaterLoad> listWaterLoads = new ArrayList<>();
 
@@ -64,9 +66,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Logger.enableLog();
 
-        sessionManager=new SharedPreferencesManager(MainActivity.this);
+        userProfil =new UserProfil(MainActivity.this);
 
-        if(sessionManager.getFirstRun()){
+        Logger.logI(""+userProfil.getProfilTilkeur().getListFriends().size());
+
+        if(userProfil.getFirstRun()){
             RetrieveLoads retrieveLoads = new RetrieveLoads();
             try {
                 listWaterLoads=retrieveLoads.execute().get();
@@ -75,10 +79,10 @@ public class MainActivity extends AppCompatActivity {
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
-            sessionManager.saveWaterLoads(listWaterLoads);
-            sessionManager.setFirstRunKO();
+            userProfil.saveWaterLoads(listWaterLoads);
+            userProfil.setFirstRunKO();
         }else{
-            listWaterLoads = sessionManager.getWaterLoads();
+            listWaterLoads = userProfil.getWaterLoads();
         }
 
 
@@ -100,8 +104,6 @@ public class MainActivity extends AppCompatActivity {
         //toolbar.setTitle(getString(R.string.app_name));
         setSupportActionBar(toolbar);
 
-        Logger.logI(sessionManager.getUserSurname());
-
         // Create the AccountHeader
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
@@ -109,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
                 .withHeaderBackground(R.drawable.banner)
                 .withSavedInstance(savedInstanceState)
                 .addProfiles(
-                        new ProfileDrawerItem().withName(sessionManager.getUserSurname()).withEmail(sessionManager.getEmailUser())
+                        new ProfileDrawerItem().withName(userProfil.getUserSurname()).withEmail(userProfil.getEmailUser())
                 )
                 .withSelectionListEnabled(false)
                 .build();
@@ -120,22 +122,6 @@ public class MainActivity extends AppCompatActivity {
                 .withActivity(this)
                 .withHasStableIds(true)
                 .withAccountHeader(headerResult) //set the AccountHeader we created earlier for the header.
-                .withOnDrawerListener(new Drawer.OnDrawerListener() {
-                    @Override
-                    public void onDrawerOpened(View drawerView) {
-
-                    }
-
-                    @Override
-                    public void onDrawerClosed(View drawerView) {
-
-                    }
-
-                    @Override
-                    public void onDrawerSlide(View drawerView, float slideOffset) {
-
-                    }
-                })
                 .addDrawerItems(
                         new PrimaryDrawerItem()
                                 .withName("Accueil")
@@ -197,13 +183,16 @@ public class MainActivity extends AppCompatActivity {
                                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                             }
                             else if(drawerItem.getIdentifier()==Constants.ID_ITEM_LOGOUT){
-                                sessionManager.setUserOffline();
+                                userProfil.setUserOffline();
                                 finish();
                             }
                             else if(drawerItem.getIdentifier()==Constants.ID_ITEM_PROFIL){
                                 Intent intent = new Intent(MainActivity.this,ProfilActivity.class);
                                 intent.putExtra("edit_mode",false);
                                 startActivity(intent);
+                            }
+                            else if(drawerItem.getIdentifier()==Constants.ID_ITEM_TILKEURS){
+                                startActivity(new Intent(MainActivity.this,FriendActivity.class));
                             }
                         }
 
@@ -233,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
         public void onCheckedChanged(IDrawerItem drawerItem, CompoundButton buttonView, boolean isChecked) {
 
 
-            if(sessionManager.getFirstCommunautilk()){
+            if(userProfil.getFirstCommunautilk()){
                 new AlertDialog.Builder(MainActivity.this)
                         .setTitle("Bienvenue dans la CommunauTilk !")
                         .setMessage("C'est votre première venue dans la CommunauTilk, avant tout il vous faut créer un profil de Tilkeur !")
@@ -241,15 +230,15 @@ public class MainActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                                 setCommunauTilk(false);
-                                sessionManager.setCommunautilkStatus(false);
+                                userProfil.setCommunautilkStatus(false);
                             }
                         })
                         .setPositiveButton("Créer mon profil", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 setCommunauTilk(true);
-                                sessionManager.setCommunautilkStatus(true);
-                                sessionManager.setFirstCommunautilk(false);
+                                userProfil.setCommunautilkStatus(true);
+                                userProfil.setFirstCommunautilk(false);
                                 Intent intent = new Intent(MainActivity.this,ProfilActivity.class);
                                 intent.putExtra("edit_mode",true);
                                 startActivity(intent);
@@ -260,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
                         .show();
             }else{
                 setCommunauTilk(isChecked);
-                sessionManager.setCommunautilkStatus(isChecked);
+                userProfil.setCommunautilkStatus(isChecked);
             }
 
 
@@ -298,8 +287,8 @@ public class MainActivity extends AppCompatActivity {
     public void onResume(){
         super.onResume();
 
-        if(sessionManager.mustBeRestarted()){
-            sessionManager.setMustBeRestarted(false);
+        if(userProfil.mustBeRestarted()){
+            userProfil.setMustBeRestarted(false);
             restartApp();
         }
 
@@ -316,10 +305,10 @@ public class MainActivity extends AppCompatActivity {
 
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.clearLists();
-        ArrayList<Room> listRooms = sessionManager.getRooms();
+        ArrayList<Room> listRooms = userProfil.getRooms();
         adapter.addFragment(new ResumeFragment(), getString(R.string.tab_resume));
 
-        if(sessionManager.isRoomOrganisation()){
+        if(userProfil.isRoomOrganisation()){
             for(Room room : listRooms){
                 adapter.addFragment(RoomFragment.newInstance(room),room.getName());
             }
@@ -358,7 +347,7 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.menu_logout:
             {
-                sessionManager.setUserOffline();
+                userProfil.setUserOffline();
                 finish();
                 return true;
             }

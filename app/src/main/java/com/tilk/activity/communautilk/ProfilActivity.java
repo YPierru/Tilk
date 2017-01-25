@@ -1,4 +1,4 @@
-package com.tilk.activity;
+package com.tilk.activity.communautilk;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
@@ -16,7 +16,7 @@ import com.tilk.models.ProfilTilkeur;
 import com.tilk.utils.Constants;
 import com.tilk.utils.HttpPostManager;
 import com.tilk.utils.Logger;
-import com.tilk.utils.SharedPreferencesManager;
+import com.tilk.models.UserProfil;
 
 import static android.view.View.GONE;
 
@@ -36,16 +36,15 @@ public class ProfilActivity extends AppCompatActivity {
     private EditText etNbAdults;
     private EditText etNbKids;
 
-    private SharedPreferencesManager sharedPreferencesManager;
+    private UserProfil userProfil;
     private boolean firstUse;
-    private ProfilTilkeur currentProfil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profil);
 
-        sharedPreferencesManager = new SharedPreferencesManager(this);
+        userProfil = new UserProfil(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("CommunauTilk - Mon profil");
@@ -77,7 +76,6 @@ public class ProfilActivity extends AppCompatActivity {
         }else{
             viewMode();
             firstUse=false;
-            currentProfil = sharedPreferencesManager.getProfilTilkeur();
             fillTextView();
         }
 
@@ -105,46 +103,49 @@ public class ProfilActivity extends AppCompatActivity {
             String strDpt = etDpt.getText().toString();
             String strNbAdults= etNbAdults.getText().toString();
             String strNbKids=etNbKids.getText().toString();
-            if(strPseudo.length()>0){
-                if(firstUse){
-                    currentProfil=new ProfilTilkeur(strPseudo);
-                    if(strDpt.length()>0) {
-                        Logger.logI("1");
-                        currentProfil.setDepartement(strDpt);
-                    }
-                    if(strNbAdults.length()>0) {
-                        Logger.logI("2");
-                        currentProfil.setNbAdults(Integer.valueOf(strNbAdults));
-                    }
-                    if(strNbKids.length()>0) {
-                        Logger.logI("3");
-                        currentProfil.setNbKids(Integer.valueOf(strNbKids));
-                    }
-                }else{
-                    if(strPseudo.length()>0) {
-                        currentProfil.setPseudo(strPseudo);
-                    }
-                    if(strDpt.length()>0) {
-                        currentProfil.setDepartement(strDpt);
-                    }
-                    if(strNbAdults.length()>0) {
-                        currentProfil.setNbAdults(Integer.valueOf(strNbAdults));
-                    }
-                    if(strNbKids.length()>0) {
-                        currentProfil.setNbKids(Integer.valueOf(strNbKids));
-                    }
-                }
+            ProfilTilkeur currentProfil;
+            boolean isModified=false;
 
+
+            if (firstUse) {
+                currentProfil = new ProfilTilkeur();
+            } else {
+                currentProfil = userProfil.getProfilTilkeur();
+            }
+
+            if (strPseudo.length() > 0) {
+                isModified=true;
+                currentProfil.setPseudo(strPseudo);
+            }
+            if (strDpt.length() > 0) {
+                isModified=true;
+                currentProfil.setDepartement(strDpt);
+            }
+            if (strNbAdults.length() > 0) {
+                isModified=true;
+                currentProfil.setNbAdults(Integer.valueOf(strNbAdults));
+            }
+            if (strNbKids.length() > 0) {
+                isModified=true;
+                currentProfil.setNbKids(Integer.valueOf(strNbKids));
+            }
+
+
+
+            if(isModified) {
+                userProfil.setProfilTilkeur(currentProfil);
                 new SaveProfil().execute();
-                sharedPreferencesManager.setProfilTilkeur(currentProfil);
                 viewMode();
                 fillTextView();
             }
+
 
         }
     };
 
     private void fillTextView(){
+
+        ProfilTilkeur currentProfil = userProfil.getProfilTilkeur();
         tvPseudo.setText(currentProfil.getPseudo());
         tvDpt.setText(currentProfil.getDepartement());
         tvNbAdults.setText(""+currentProfil.getNbAdults());
@@ -208,8 +209,9 @@ public class ProfilActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... args) {
+            ProfilTilkeur currentProfil = userProfil.getProfilTilkeur();
             try {
-                String response = HttpPostManager.sendPost("tilkeur="+currentProfil.getJson(sharedPreferencesManager.getUserId()), Constants.URL_UPDATE_PROFIL);
+                String response = HttpPostManager.sendPost("tilkeur="+currentProfil.getJson(userProfil.getUserId()), Constants.URL_UPDATE_PROFIL);
 
                 Logger.logI(response);
             }catch(Exception e){

@@ -13,10 +13,10 @@ import android.widget.Toast;
 import com.tilk.R;
 import com.tilk.models.FriendTilkeur;
 import com.tilk.models.ProfilTilkeur;
+import com.tilk.models.UserProfil;
 import com.tilk.utils.Constants;
 import com.tilk.utils.HttpPostManager;
 import com.tilk.utils.Logger;
-import com.tilk.utils.SharedPreferencesManager;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -31,10 +31,9 @@ public class LoginActivity extends AppCompatActivity {
     private EditText etPasswordText;
     private Button btnLogin;
 
-    private SharedPreferencesManager sessionManager;
+    private UserProfil userProfil;
 
     private String email;
-    private int returnCode;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
         // Hide the status bar.
         int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
-        sessionManager = new SharedPreferencesManager(LoginActivity.this);
+        userProfil = new UserProfil(LoginActivity.this);
 
         etEmailText = (EditText)findViewById(R.id.input_email);
 
@@ -81,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        if(bundle.getInt("returnnCode")==1){
+        if(bundle.getInt("returnCode")==1){
             onLoginSuccess(bundle);
         }else{
             onLoginFailed(getString(R.string.login_failed));
@@ -100,19 +99,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onLoginSuccess(Bundle bundle) {
-        sessionManager.setUserOnline();
-        sessionManager.setUserEmail(email);
-        sessionManager.setUserId(bundle.getInt("id_user"));
-        sessionManager.setTilkId(bundle.getInt("id_tilk"));
-        sessionManager.setUserSurname(bundle.getString("surname"));
-        int ctStatus = bundle.getInt("ct_status");
+        userProfil.setUserOnline();
+        userProfil.setUserEmail(email);
+        userProfil.setUserId(bundle.getInt("id_user"));
+        userProfil.setTilkId(bundle.getInt("id_tilk"));
+        userProfil.setUserSurname(bundle.getString("surname"));
 
-        if(ctStatus==1) {
-            sessionManager.setProfilTilkeur(new ProfilTilkeur(bundle.getString("ct_pseudo"),
-                                                              bundle.getString("ct_dpt"),
-                                                              bundle.getInt("ct_nbAdults"),
-                                                              bundle.getInt("ct_nbKids")));
-        }
         startActivity(new Intent(LoginActivity.this,MainActivity.class));
         finish();
     }
@@ -143,8 +135,6 @@ public class LoginActivity extends AppCompatActivity {
 
         return valid;
     }
-
-
 
 
     private class LoginCheck extends AsyncTask<Void,Void,Bundle> {
@@ -182,26 +172,32 @@ public class LoginActivity extends AppCompatActivity {
                     bundle.putInt("id_user", jsonObject.getInt("id_user"));
                     bundle.putString("surname", jsonObject.getString("surname"));
                     bundle.putInt("ct_status", jsonObject.getInt("ct_status"));
-                    bundle.putString("ct_pseudo", jsonObject.getString("ct_pseudo"));
-                    bundle.putString("ct_dpt", jsonObject.getString("ct_dpt"));
-                    bundle.putInt("ct_nbAdults", jsonObject.getInt("ct_nbAdults"));
-                    bundle.putInt("ct_nbKids", jsonObject.getInt("ct_nbKids"));
 
 
                     if(jsonObject.getInt("ct_status")==1) {
                         response = HttpPostManager.sendPost("id_user=" + jsonObject.getInt("id_user"), Constants.URL_GET_FRIENDS);
 
-                        jsonObject = new JSONObject(response);
-                        JSONArray array = jsonObject.getJSONArray("friends");
+                        JSONObject jsonObject2 = new JSONObject(response);
+                        JSONArray array = jsonObject2.getJSONArray("friends");
                         ArrayList<FriendTilkeur> listFriends = new ArrayList<>();
 
                         for (int i = 0; i < array.length(); i++) {
                             listFriends.add(new FriendTilkeur(array.getJSONObject(i).getInt("friend_id"), array.getJSONObject(i).getString("friend_pseudo"), array.getJSONObject(i).getInt("friend_conso")));
                         }
 
-                        ProfilTilkeur profilTilkeur = sessionManager.getProfilTilkeur();
+
+                        ProfilTilkeur profilTilkeur = userProfil.getProfilTilkeur();
                         profilTilkeur.setListFriends(listFriends);
-                        sessionManager.setProfilTilkeur(profilTilkeur);
+                        profilTilkeur.setPseudo(jsonObject.getString("ct_pseudo"));
+                        profilTilkeur.setDepartement(jsonObject.getString("ct_dpt"));
+                        profilTilkeur.setNbAdults(jsonObject.getInt("ct_nbAdults"));
+                        profilTilkeur.setNbKids(jsonObject.getInt("ct_nbKids"));
+                        userProfil.setProfilTilkeur(profilTilkeur);
+
+
+                        userProfil = new UserProfil(LoginActivity.this);
+
+                        Logger.logI(""+userProfil.getProfilTilkeur().getListFriends().size());
 
                     }
                 }

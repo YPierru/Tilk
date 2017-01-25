@@ -6,11 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.tilk.R;
-import com.tilk.utils.SharedPreferencesManager;
+import com.tilk.models.UserProfil;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
-    private SharedPreferencesManager sessionManager;
+    private UserProfil userProfil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +23,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         decorView.setSystemUiVisibility(uiOptions);
 
 
-        sessionManager=new SharedPreferencesManager(SplashScreenActivity.this);
+        userProfil =new UserProfil(SplashScreenActivity.this);
 
         Thread background = new Thread() {
             public void run() {
@@ -33,7 +33,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                     sleep(2000);
 
                     // After 5 seconds redirect to another intent
-                    boolean userStatus=sessionManager.getUserStatus();
+                    boolean userStatus= userProfil.getUserStatus();
 
                     if (userStatus){
                         Intent i=new Intent(SplashScreenActivity.this,MainActivity.class);

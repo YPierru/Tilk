@@ -32,13 +32,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
-        <service
-            android:name=".service.MyService"
-            android:enabled="true"
-            android:exported="false" />
-
-        <activity android:name=".activity.ProfilActivity"></activity>
+        <activity android:name=".activity.communautilk.ProfilActivity" />
+        <activity android:name=".activity.communautilk.FriendActivity"/>
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package com.tilk.utils;
+package com.tilk.models;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -6,9 +6,8 @@ import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 import com.tilk.R;
-import com.tilk.models.ProfilTilkeur;
-import com.tilk.models.Room;
-import com.tilk.models.WaterLoad;
+import com.tilk.utils.Constants;
+import com.tilk.utils.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +16,12 @@ import java.util.List;
  * Created by YPierru on 05/01/2017.
  */
 
-public class SharedPreferencesManager {
+public class UserProfil {
 
     private Context context;
     private Gson gson;
 
-    public SharedPreferencesManager(Context cont){
+    public UserProfil(Context cont){
         context=cont;
         gson = new Gson();
     }

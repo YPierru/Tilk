@@ -20,7 +20,7 @@ import android.widget.FrameLayout;
 import com.tilk.R;
 import com.tilk.adapter.CustomExpandableListAdapter;
 import com.tilk.models.Room;
-import com.tilk.utils.SharedPreferencesManager;
+import com.tilk.models.UserProfil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +38,7 @@ public class RoomsActivity extends AppCompatActivity {
     private List<Room> listRooms;
     private List<String> listRoomsName;
     private HashMap<String,List<String>> listRoomsNameLoadsName;
-    private SharedPreferencesManager sharedPreferencesManager;
+    private UserProfil userProfil;
 
 
     @Override
@@ -50,7 +50,7 @@ public class RoomsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        sharedPreferencesManager = new SharedPreferencesManager(this);
+        userProfil = new UserProfil(this);
 
         //Retrieve listRooms
         listRoomsName = new ArrayList<>();
@@ -60,7 +60,7 @@ public class RoomsActivity extends AppCompatActivity {
         expandableListView = (ExpandableListView) findViewById(R.id.elv_rooms);
         fabAddRoom = (FloatingActionButton)findViewById(R.id.fab_add_room);
 
-        expandableListAdapter = new CustomExpandableListAdapter(this,sharedPreferencesManager, listRoomsName, listRoomsNameLoadsName);
+        expandableListAdapter = new CustomExpandableListAdapter(this, userProfil, listRoomsName, listRoomsNameLoadsName);
 
         expandableListView.setAdapter(expandableListAdapter);
 
@@ -108,7 +108,7 @@ public class RoomsActivity extends AppCompatActivity {
 
 
     private void syncLists(){
-        listRooms=sharedPreferencesManager.getRooms();
+        listRooms= userProfil.getRooms();
         listRoomsName.clear();
         listRoomsNameLoadsName.clear();
         for(Room room : listRooms){
@@ -182,7 +182,7 @@ public class RoomsActivity extends AppCompatActivity {
                         }
                         room.clearWaterLoads();
                         listRooms.remove(index);
-                        sharedPreferencesManager.saveRooms(listRooms);
+                        userProfil.saveRooms(listRooms);
                         syncLists();
                         refreshELV();
                     }
@@ -215,10 +215,10 @@ public class RoomsActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         String newLabel=edittext.getText().toString();
                         listRooms.add(new Room(newLabel));
-                        sharedPreferencesManager.saveRooms(listRooms);
+                        userProfil.saveRooms(listRooms);
                         syncLists();
                         refreshELV();
-                        sharedPreferencesManager.setMustBeRestarted(true);
+                        userProfil.setMustBeRestarted(true);
                         dialog.dismiss();
                     }
                 })

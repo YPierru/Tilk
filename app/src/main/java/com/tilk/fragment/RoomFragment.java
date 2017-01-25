@@ -20,7 +20,7 @@ import com.tilk.utils.Constants;
 import com.tilk.utils.EStatsTypes;
 import com.tilk.utils.HttpPostManager;
 import com.tilk.utils.Logger;
-import com.tilk.utils.SharedPreferencesManager;
+import com.tilk.models.UserProfil;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -84,8 +84,8 @@ public class RoomFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(getContext());
-        ArrayList<Room> listRooms = sharedPreferencesManager.getRooms();
+        UserProfil userProfil = new UserProfil(getContext());
+        ArrayList<Room> listRooms = userProfil.getRooms();
         for(Room r : listRooms){
             if(r.getName().equals(room.getName())){
                 room=r;

@@ -1,0 +1,43 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent">
+
+<android.support.design.widget.AppBarLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_friends_activity"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+</android.support.design.widget.AppBarLayout>
+
+
+    <ListView
+        android:id="@+id/lv_friends"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:paddingBottom="55dp"
+        android:listSelector="@android:color/transparent"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="@null"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context="com.tilk.activity.communautilk.FriendActivity" />
+
+
+<android.support.design.widget.FloatingActionButton
+    android:id="@+id/fab_add_room"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom|end"
+    android:layout_margin="25dp"
+    android:src="@drawable/ic_add_room"/>
+
+</android.support.design.widget.CoordinatorLayout>

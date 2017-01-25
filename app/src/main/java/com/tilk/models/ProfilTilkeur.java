@@ -23,10 +23,10 @@ public class ProfilTilkeur implements Serializable{
         listFriends = new ArrayList<>();
     }
 
-    public ProfilTilkeur(String pseudo){
-        this.pseudo=pseudo;
+    public ProfilTilkeur(){
         listFriends = new ArrayList<>();
     }
+
 
     public String getPseudo() {
         return pseudo;

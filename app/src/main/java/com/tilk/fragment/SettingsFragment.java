@@ -6,7 +6,7 @@ import android.preference.PreferenceFragment;
 
 import com.tilk.R;
 import com.tilk.utils.Logger;
-import com.tilk.utils.SharedPreferencesManager;
+import com.tilk.models.UserProfil;
 
 
 /**
@@ -28,10 +28,10 @@ public class SettingsFragment extends PreferenceFragment  {
             int count=0;
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(getActivity());
+                UserProfil userProfil = new UserProfil(getActivity());
                 if(count%2==0) {
-                    sharedPreferencesManager.setMustBeRestarted(true);
-                    Logger.logI(""+sharedPreferencesManager.mustBeRestarted());
+                    userProfil.setMustBeRestarted(true);
+                    Logger.logI(""+userProfil.mustBeRestarted());
                 }
                 count++;
 
