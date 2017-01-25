@@ -11,13 +11,18 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.tilk.R;
+import com.tilk.models.FriendTilkeur;
 import com.tilk.models.ProfilTilkeur;
 import com.tilk.utils.Constants;
 import com.tilk.utils.HttpPostManager;
 import com.tilk.utils.Logger;
 import com.tilk.utils.SharedPreferencesManager;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -30,14 +35,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private String email;
     private int returnCode;
-    private int id_tilk;
-    private int id_user;
-    private String surname;
-    private int ctStatus;
-    private String ctDpt;
-    private String ctPseudo;
-    private int ctNbAdults;
-    private int ctNbKids;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,13 +66,26 @@ public class LoginActivity extends AppCompatActivity {
     public void login() {
 
         if (!validate()) {
-            onLoginFailed(getString(R.string.login_bad_format),null);
+            onLoginFailed(getString(R.string.login_bad_format));
             return;
         }
 
         email = etEmailText.getText().toString();
 
-        new LoginCheck().execute();
+        Bundle bundle = new Bundle();
+        try {
+            bundle = new LoginCheck().execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        if(bundle.getInt("returnnCode")==1){
+            onLoginSuccess(bundle);
+        }else{
+            onLoginFailed(getString(R.string.login_failed));
+        }
     }
 
     @Override
@@ -89,25 +99,25 @@ public class LoginActivity extends AppCompatActivity {
         System.exit(0);
     }
 
-    public void onLoginSuccess(ProgressDialog progressDialog) {
+    public void onLoginSuccess(Bundle bundle) {
         sessionManager.setUserOnline();
         sessionManager.setUserEmail(email);
-        sessionManager.setUserId(id_user);
-        sessionManager.setTilkId(id_tilk);
-        sessionManager.setUserSurname(surname);
-        if(ctStatus==1) {
-            sessionManager.setProfilTilkeur(new ProfilTilkeur(ctPseudo,ctDpt,ctNbAdults,ctNbKids));
-        }
+        sessionManager.setUserId(bundle.getInt("id_user"));
+        sessionManager.setTilkId(bundle.getInt("id_tilk"));
+        sessionManager.setUserSurname(bundle.getString("surname"));
+        int ctStatus = bundle.getInt("ct_status");
 
-        progressDialog.dismiss();
+        if(ctStatus==1) {
+            sessionManager.setProfilTilkeur(new ProfilTilkeur(bundle.getString("ct_pseudo"),
+                                                              bundle.getString("ct_dpt"),
+                                                              bundle.getInt("ct_nbAdults"),
+                                                              bundle.getInt("ct_nbKids")));
+        }
         startActivity(new Intent(LoginActivity.this,MainActivity.class));
         finish();
     }
 
-    public void onLoginFailed(String toPrint,ProgressDialog progressDialog) {
-        if(progressDialog!=null) {
-            progressDialog.dismiss();
-        }
+    public void onLoginFailed(String toPrint) {
         Toast.makeText(getBaseContext(), toPrint, Toast.LENGTH_LONG).show();
     }
 
@@ -137,13 +147,15 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-    private class LoginCheck extends AsyncTask<Void,Void,Void> {
+    private class LoginCheck extends AsyncTask<Void,Void,Bundle> {
 
         private ProgressDialog progressDialog;
         private String password;
+        private Bundle bundle;
 
         public LoginCheck() {
             this.password = etPasswordText.getText().toString();
+            bundle = new Bundle();
         }
 
         @Override
@@ -156,27 +168,42 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         @Override
-        protected Void doInBackground(Void... args) {
+        protected Bundle doInBackground(Void... args) {
             try {
 
                 String response = HttpPostManager.sendPost("email=" + email + "&password=" + password, Constants.URL_LOGIN);
 
                 JSONObject jsonObject = new JSONObject(response);
-                returnCode = jsonObject.getInt("code");
 
-                if (returnCode == 1) {
-                    id_tilk = jsonObject.getInt("id_tilk");
-                    id_user = jsonObject.getInt("id_user");
-                    surname = jsonObject.getString("surname");
-                    ctStatus = jsonObject.getInt("ct_status");
-                    ctPseudo = jsonObject.getString("ct_pseudo");
-                    ctDpt = jsonObject.getString("ct_dpt");
-                    ctNbAdults = jsonObject.getInt("ct_nbAdults");
-                    ctNbKids = jsonObject.getInt("ct_nbKids");
+                bundle.putInt("returnCode", jsonObject.getInt("code"));
 
-                    onLoginSuccess(progressDialog);
-                } else {
-                    onLoginFailed(getString(R.string.login_failed), progressDialog);
+                if(jsonObject.getInt("code")==1) {
+                    bundle.putInt("id_tilk", jsonObject.getInt("id_tilk"));
+                    bundle.putInt("id_user", jsonObject.getInt("id_user"));
+                    bundle.putString("surname", jsonObject.getString("surname"));
+                    bundle.putInt("ct_status", jsonObject.getInt("ct_status"));
+                    bundle.putString("ct_pseudo", jsonObject.getString("ct_pseudo"));
+                    bundle.putString("ct_dpt", jsonObject.getString("ct_dpt"));
+                    bundle.putInt("ct_nbAdults", jsonObject.getInt("ct_nbAdults"));
+                    bundle.putInt("ct_nbKids", jsonObject.getInt("ct_nbKids"));
+
+
+                    if(jsonObject.getInt("ct_status")==1) {
+                        response = HttpPostManager.sendPost("id_user=" + jsonObject.getInt("id_user"), Constants.URL_GET_FRIENDS);
+
+                        jsonObject = new JSONObject(response);
+                        JSONArray array = jsonObject.getJSONArray("friends");
+                        ArrayList<FriendTilkeur> listFriends = new ArrayList<>();
+
+                        for (int i = 0; i < array.length(); i++) {
+                            listFriends.add(new FriendTilkeur(array.getJSONObject(i).getInt("friend_id"), array.getJSONObject(i).getString("friend_pseudo"), array.getJSONObject(i).getInt("friend_conso")));
+                        }
+
+                        ProfilTilkeur profilTilkeur = sessionManager.getProfilTilkeur();
+                        profilTilkeur.setListFriends(listFriends);
+                        sessionManager.setProfilTilkeur(profilTilkeur);
+
+                    }
                 }
 
 
@@ -184,7 +211,13 @@ public class LoginActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            return null;
+            return bundle;
+        }
+
+        @Override
+        protected void onPostExecute(Bundle bundle) {
+            super.onPostExecute(bundle);
+            progressDialog.dismiss();
         }
     }
 }

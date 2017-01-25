@@ -13,18 +13,19 @@ public class ProfilTilkeur implements Serializable{
     private String departement;
     private int nbAdults;
     private int nbKids;
-    private ArrayList<String> listPseudoFriends;
+    private ArrayList<FriendTilkeur> listFriends;
 
     public ProfilTilkeur(String pseudo, String departement, int nbAdults, int nbKids) {
         this.pseudo = pseudo;
         this.departement = departement;
         this.nbAdults = nbAdults;
         this.nbKids = nbKids;
+        listFriends = new ArrayList<>();
     }
 
     public ProfilTilkeur(String pseudo){
         this.pseudo=pseudo;
-        listPseudoFriends = new ArrayList<>();
+        listFriends = new ArrayList<>();
     }
 
     public String getPseudo() {
@@ -59,12 +60,12 @@ public class ProfilTilkeur implements Serializable{
         this.nbKids = nbKids;
     }
 
-    public ArrayList<String> getListPseudoFriends() {
-        return listPseudoFriends;
+    public void setListFriends(ArrayList<FriendTilkeur> listFriends) {
+        this.listFriends = listFriends;
     }
 
-    public void setListPseudoFriends(ArrayList<String> listPseudoFriends) {
-        this.listPseudoFriends = listPseudoFriends;
+    public ArrayList<FriendTilkeur> getListFriends() {
+        return listFriends;
     }
 
     public String getJson(int userId){
