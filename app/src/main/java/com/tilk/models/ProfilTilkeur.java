@@ -64,6 +64,10 @@ public class ProfilTilkeur implements Serializable{
         this.listFriends = listFriends;
     }
 
+    public void addFriend(FriendTilkeur friendTilkeur){
+        listFriends.add(friendTilkeur);
+    }
+
     public ArrayList<FriendTilkeur> getListFriends() {
         return listFriends;
     }

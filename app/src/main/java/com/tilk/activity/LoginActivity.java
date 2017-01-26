@@ -11,17 +11,14 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.tilk.R;
-import com.tilk.models.FriendTilkeur;
 import com.tilk.models.ProfilTilkeur;
 import com.tilk.models.UserProfil;
 import com.tilk.utils.Constants;
 import com.tilk.utils.HttpPostManager;
 import com.tilk.utils.Logger;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 
@@ -175,7 +172,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
                     if(jsonObject.getInt("ct_status")==1) {
-                        response = HttpPostManager.sendPost("id_user=" + jsonObject.getInt("id_user"), Constants.URL_GET_FRIENDS);
+                        /*response = HttpPostManager.sendPost("id_user=" + jsonObject.getInt("id_user"), Constants.URL_GET_FRIENDS);
 
                         JSONObject jsonObject2 = new JSONObject(response);
                         JSONArray array = jsonObject2.getJSONArray("friends");
@@ -183,11 +180,15 @@ public class LoginActivity extends AppCompatActivity {
 
                         for (int i = 0; i < array.length(); i++) {
                             listFriends.add(new FriendTilkeur(array.getJSONObject(i).getInt("friend_id"), array.getJSONObject(i).getString("friend_pseudo"), array.getJSONObject(i).getInt("friend_conso")));
-                        }
+                        }*/
 
+
+                       /* ArrayList<FriendTilkeur> listFriends = new ArrayList<>();
+                        listFriends.add(new FriendTilkeur(1,"Christophe",20000));
+                        listFriends.add(new FriendTilkeur(2,"Nils",15000));*/
 
                         ProfilTilkeur profilTilkeur = userProfil.getProfilTilkeur();
-                        profilTilkeur.setListFriends(listFriends);
+                        //profilTilkeur.setListFriends(listFriends);
                         profilTilkeur.setPseudo(jsonObject.getString("ct_pseudo"));
                         profilTilkeur.setDepartement(jsonObject.getString("ct_dpt"));
                         profilTilkeur.setNbAdults(jsonObject.getInt("ct_nbAdults"));
@@ -195,9 +196,9 @@ public class LoginActivity extends AppCompatActivity {
                         userProfil.setProfilTilkeur(profilTilkeur);
 
 
-                        userProfil = new UserProfil(LoginActivity.this);
+                        //userProfil = new UserProfil(LoginActivity.this);
 
-                        Logger.logI(""+userProfil.getProfilTilkeur().getListFriends().size());
+                        //Logger.logI(""+userProfil.getProfilTilkeur().getListFriends().size());
 
                     }
                 }

@@ -27,6 +27,7 @@ import com.mikepenz.materialdrawer.model.SwitchDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.Nameable;
 import com.tilk.R;
+import com.tilk.activity.communautilk.CompareActivity;
 import com.tilk.activity.communautilk.FriendActivity;
 import com.tilk.activity.communautilk.ProfilActivity;
 import com.tilk.adapter.ViewPagerAdapter;
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
         userProfil =new UserProfil(MainActivity.this);
 
-        Logger.logI(""+userProfil.getProfilTilkeur().getListFriends().size());
+        //Logger.logI(""+userProfil.getProfilTilkeur().getListFriends().size());
 
         if(userProfil.getFirstRun()){
             RetrieveLoads retrieveLoads = new RetrieveLoads();
@@ -96,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
         setupViewPager(viewPager);
         initNavigationDrawer();
 
+        startActivity(new Intent(MainActivity.this,CompareActivity.class));
     }
 
     private void initNavigationDrawer(){
@@ -193,6 +195,9 @@ public class MainActivity extends AppCompatActivity {
                             }
                             else if(drawerItem.getIdentifier()==Constants.ID_ITEM_TILKEURS){
                                 startActivity(new Intent(MainActivity.this,FriendActivity.class));
+                            }
+                            else if(drawerItem.getIdentifier()==Constants.ID_ITEM_COMPARE){
+                                startActivity(new Intent(MainActivity.this,CompareActivity.class));
                             }
                         }
 

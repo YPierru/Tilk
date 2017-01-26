@@ -33,7 +33,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.communautilk.ProfilActivity" />
-        <activity android:name=".activity.communautilk.FriendActivity"/>
+        <activity android:name=".activity.communautilk.FriendActivity" />
+        <activity android:name=".activity.communautilk.CompareActivity"></activity>
     </application>
 
 </manifest>

@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -62,7 +61,6 @@ public class WaterLoadFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         waterLoad = (WaterLoad)getArguments().getSerializable("waterload");
-
     }
 
     @Override
@@ -152,6 +150,8 @@ public class WaterLoadFragment extends Fragment {
                 actionButtonGraph();
             }
         });
+
+        btnShowGraphDay.performClick();
     }
 
     private void buildChart(){
@@ -171,7 +171,6 @@ public class WaterLoadFragment extends Fragment {
     }
 
     private void actionButtonGraph(){
-        final ScrollView scrollView = (ScrollView) getActivity().findViewById(R.id.sv_poste);
         setVisibilityAllChartGone();
         if(chartBuilder!=null){
             chartBuilder=null;
@@ -190,14 +189,6 @@ public class WaterLoadFragment extends Fragment {
             chartBuilder = new ChartBuilder(chart_year);
         }
         new RetrieveGraphValues().execute();
-
-        scrollView.post(new Runnable() {
-
-            @Override
-            public void run() {
-                scrollView.fullScroll(ScrollView.FOCUS_DOWN);
-            }
-        });
     }
 
     private void updateTextView(){
@@ -339,7 +330,7 @@ public class WaterLoadFragment extends Fragment {
         }
 
         public void startMonitor(){
-            executor.scheduleAtFixedRate(this, 0, 2, TimeUnit.SECONDS);
+            executor.scheduleAtFixedRate(this, 0, Constants.MONITOR_SECONDS, TimeUnit.SECONDS);
         }
 
         public void stopMonitor(){

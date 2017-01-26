@@ -8,7 +8,7 @@ public class Constants {
 
     public final static String TAG_LOG="TILK";
 
-    public final static int RESPONSE_CODE_OK=1;
+    public final static int MONITOR_SECONDS=5;
 
     public final static String SESSION_FIRSTRUN="firstrun";
     public final static String SESSION_STATUS="status";
@@ -16,8 +16,6 @@ public class Constants {
     public final static String SESSION_NUMBER_WATERLOADS="number_waterloads";
     public final static String SESSION_ROOM="room";
     public final static String SESSION_NUMBER_ROOMS="number_rooms";
-    public final static String SESSION_FRIEND="friend";
-    public final static String SESSION_NUMBER_FRIENDS="number_friends";
     public final static String SESSION_ID_USER="id_user";
     public final static String SESSION_EMAIL_USER="email_user";
     public final static String SESSION_SURNAME_USER="surname_user";

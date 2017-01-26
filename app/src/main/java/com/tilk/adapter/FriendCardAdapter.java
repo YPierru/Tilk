@@ -1,13 +1,13 @@
 package com.tilk.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tilk.R;
 import com.tilk.models.FriendTilkeur;
@@ -21,20 +21,22 @@ import java.util.List;
 
 public class FriendCardAdapter extends ArrayAdapter<FriendTilkeur> {
 
-    private static final String TAG = "FriendCardAdapter";
     private List<FriendTilkeur> listFriends;
     private int idItemRes;
+    private boolean editMode;
 
 
     static class CardViewHolder {
         TextView name;
         TextView conso;
+        ImageButton btnAction;
     }
 
-    public FriendCardAdapter(Context context, int idItemRes, ArrayList<FriendTilkeur> listFriends) {
+    public FriendCardAdapter(Context context, int idItemRes, ArrayList<FriendTilkeur> listFriends,boolean editMode) {
         super(context, idItemRes);
         this.idItemRes=idItemRes;
         this.listFriends=listFriends;
+        this.editMode=editMode;
     }
 
     @Override
@@ -56,24 +58,36 @@ public class FriendCardAdapter extends ArrayAdapter<FriendTilkeur> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
-        CardViewHolder viewHolder;
+        final CardViewHolder viewHolder;
         if (row == null) {
             LayoutInflater inflater = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             row = inflater.inflate(idItemRes, parent, false);
             viewHolder = new CardViewHolder();
             viewHolder.name = (TextView) row.findViewById(R.id.tv_friend_name);
             viewHolder.conso = (TextView) row.findViewById(R.id.tv_conso_friend);
+            viewHolder.btnAction = (ImageButton)row.findViewById(R.id.btn_action);
             row.setTag(viewHolder);
         } else {
             viewHolder = (CardViewHolder)row.getTag();
         }
-        FriendTilkeur friend = getItem(position);
+        final FriendTilkeur friend = getItem(position);
         viewHolder.name.setText(friend.getPseudo());
-        viewHolder.conso.setText("Consommation en 2017 : "+String.valueOf(friend.getConsoYear()));
+        viewHolder.conso.setText(String.valueOf(friend.getConsoYear())+"L");
+        viewHolder.btnAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(editMode) {
+                    Toast.makeText(getContext(),"Supprimer "+friend.getPseudo(),Toast.LENGTH_SHORT).show();
+                    listFriends.remove(friend);
+                    notifyDataSetChanged();
+
+                }
+                else {
+                    Toast.makeText(getContext(),"Dialoguer avec "+friend.getPseudo(),Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         return row;
     }
 
-    public Bitmap decodeToBitmap(byte[] decodedByte) {
-        return BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
-    }
 }

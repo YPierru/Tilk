@@ -1,6 +1,7 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sv_resume"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="55dp">
@@ -13,8 +14,8 @@
 
 
         <include layout="@layout/layout_card_resume_economies"/>
-
-        <include layout="@layout/layout_card_resume_conso"/>
+        <include layout="@layout/layout_card_conso"/>
+        <include layout="@layout/layout_card_evolution"/>
 
     </LinearLayout>
 </ScrollView>

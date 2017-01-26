@@ -1,7 +1,5 @@
 package com.tilk.activity.communautilk;
 
-import android.app.ProgressDialog;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,9 +11,6 @@ import android.widget.TextView;
 
 import com.tilk.R;
 import com.tilk.models.ProfilTilkeur;
-import com.tilk.utils.Constants;
-import com.tilk.utils.HttpPostManager;
-import com.tilk.utils.Logger;
 import com.tilk.models.UserProfil;
 
 import static android.view.View.GONE;
@@ -47,7 +42,7 @@ public class ProfilActivity extends AppCompatActivity {
         userProfil = new UserProfil(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("CommunauTilk - Mon profil");
+        toolbar.setTitle("Mon profil");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -134,7 +129,7 @@ public class ProfilActivity extends AppCompatActivity {
 
             if(isModified) {
                 userProfil.setProfilTilkeur(currentProfil);
-                new SaveProfil().execute();
+                //new SaveProfil().execute();
                 viewMode();
                 fillTextView();
             }
@@ -193,7 +188,7 @@ public class ProfilActivity extends AppCompatActivity {
     }
 
 
-    private class SaveProfil extends AsyncTask<Void,Void,Void> {
+    /*private class SaveProfil extends AsyncTask<Void,Void,Void> {
 
         private ProgressDialog progressDialog;
 
@@ -225,6 +220,6 @@ public class ProfilActivity extends AppCompatActivity {
         protected void onPostExecute(Void arg) {
             progressDialog.dismiss();
         }
-    }
+    }*/
 
 }

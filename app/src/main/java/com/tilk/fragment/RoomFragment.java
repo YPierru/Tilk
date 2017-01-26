@@ -7,20 +7,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.tilk.R;
 import com.tilk.models.Room;
+import com.tilk.models.UserProfil;
 import com.tilk.models.WaterLoad;
 import com.tilk.utils.ChartBuilder;
 import com.tilk.utils.Constants;
 import com.tilk.utils.EStatsTypes;
 import com.tilk.utils.HttpPostManager;
 import com.tilk.utils.Logger;
-import com.tilk.models.UserProfil;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -159,6 +158,8 @@ public class RoomFragment extends Fragment {
                 actionButtonGraph();
             }
         });
+
+        btnShowGraphDay.performClick();
     }
 
     private void buildChart(){
@@ -190,7 +191,6 @@ public class RoomFragment extends Fragment {
     }
 
     private void actionButtonGraph(){
-        final ScrollView scrollView = (ScrollView) getActivity().findViewById(R.id.sv_room);
         setVisibilityAllChartGone();
 
         if(chartBuilder!=null){
@@ -210,14 +210,6 @@ public class RoomFragment extends Fragment {
             chartBuilder = new ChartBuilder(chart_year);
         }
         new RetrieveGraphValues().execute();
-
-        scrollView.post(new Runnable() {
-
-            @Override
-            public void run() {
-                scrollView.fullScroll(ScrollView.FOCUS_DOWN);
-            }
-        });
     }
 
     private void updateTextView(){
@@ -370,7 +362,7 @@ public class RoomFragment extends Fragment {
         }
 
         public void startMonitor(){
-            executor.scheduleAtFixedRate(this, 0, 2, TimeUnit.SECONDS);
+            executor.scheduleAtFixedRate(this, 0, Constants.MONITOR_SECONDS, TimeUnit.SECONDS);
         }
 
         public void stopMonitor(){
