@@ -6,7 +6,7 @@
     <color name="colorAccent">#1976D2</color>
     <color name="colorPrimaryText">#212121</color>
     <color name="colorSecondaryText">#757575</color>
-    <color name="colorIcons">#FFFFFF</color>
+    <color name="colorIcons">#ffffff</color>
     <color name="colorDivider">#BDBDBD</color>
     <color name="colorBtnLogin">#ffffff</color>
     <color name="colorTabIndicator">#ffffff</color>

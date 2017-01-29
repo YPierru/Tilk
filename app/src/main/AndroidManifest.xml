@@ -34,7 +34,11 @@
         </activity>
         <activity android:name=".activity.communautilk.ProfilActivity" />
         <activity android:name=".activity.communautilk.FriendActivity" />
-        <activity android:name=".activity.communautilk.CompareActivity"></activity>
+        <activity android:name=".activity.communautilk.CompareActivity" />
+        <activity
+            android:name=".activity.communautilk.MessagesActivity"
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".activity.FlowDetailActivity"></activity>
     </application>
 
 </manifest>

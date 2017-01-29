@@ -1,5 +1,6 @@
 package com.tilk.fragment;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.tilk.R;
+import com.tilk.activity.FlowDetailActivity;
 import com.tilk.models.WaterLoad;
 import com.tilk.utils.ChartBuilder;
 import com.tilk.utils.Constants;
@@ -116,6 +118,7 @@ public class WaterLoadFragment extends Fragment {
         Button btnShowGraphWeek = (Button) getView().findViewById(R.id.btn_graph_week);
         Button btnShowGraphMonth = (Button) getView().findViewById(R.id.btn_graph_month);
         Button btnShowGraphYear = (Button) getView().findViewById(R.id.btn_graph_year);
+        Button btnDetail = (Button) getView().findViewById(R.id.btn_details);
 
 
 
@@ -152,6 +155,16 @@ public class WaterLoadFragment extends Fragment {
         });
 
         btnShowGraphDay.performClick();
+
+        btnDetail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), FlowDetailActivity.class);
+                intent.putExtra("load",waterLoad);
+                startActivity(intent);
+
+            }
+        });
     }
 
     private void buildChart(){

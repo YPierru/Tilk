@@ -29,6 +29,7 @@ import com.mikepenz.materialdrawer.model.interfaces.Nameable;
 import com.tilk.R;
 import com.tilk.activity.communautilk.CompareActivity;
 import com.tilk.activity.communautilk.FriendActivity;
+import com.tilk.activity.communautilk.MessagesActivity;
 import com.tilk.activity.communautilk.ProfilActivity;
 import com.tilk.adapter.ViewPagerAdapter;
 import com.tilk.fragment.ResumeFragment;
@@ -97,7 +98,6 @@ public class MainActivity extends AppCompatActivity {
         setupViewPager(viewPager);
         initNavigationDrawer();
 
-        startActivity(new Intent(MainActivity.this,CompareActivity.class));
     }
 
     private void initNavigationDrawer(){
@@ -198,6 +198,9 @@ public class MainActivity extends AppCompatActivity {
                             }
                             else if(drawerItem.getIdentifier()==Constants.ID_ITEM_COMPARE){
                                 startActivity(new Intent(MainActivity.this,CompareActivity.class));
+                            }
+                            else if(drawerItem.getIdentifier()==Constants.ID_ITEM_MESSAGES){
+                                startActivity(new Intent(MainActivity.this,MessagesActivity.class));
                             }
                         }
 

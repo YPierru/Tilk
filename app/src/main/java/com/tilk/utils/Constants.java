@@ -26,14 +26,15 @@ public class Constants {
 
     private final static String URL_SERVER="http://tilk.laurentjerber.com";
     public final static String URL_LOGIN=URL_SERVER+"/login.php";
-    public final static String URL_GET_FRIENDS=URL_SERVER+"/get_friends.php";
+    //public final static String URL_GET_FRIENDS=URL_SERVER+"/get_friends.php";
     public final static String URL_GET_LOADS=URL_SERVER+"/get_loads.php";
     public final static String URL_GET_CURRENTFLOW=URL_SERVER+"/get_currentflow.php";
     public final static String URL_GET_STATS_DAY=URL_SERVER+"/get_stats_day.php";
     public final static String URL_GET_STATS_WEEK=URL_SERVER+"/get_stats_week.php";
     public final static String URL_GET_STATS_MONTH=URL_SERVER+"/get_stats_month.php";
     public final static String URL_GET_STATS_YEAR=URL_SERVER+"/get_stats_year.php";
-    public final static String URL_UPDATE_PROFIL=URL_SERVER+"/update_profil.php";
+    public final static String URL_GET_DATA=URL_SERVER+"/get_data.php";
+    //public final static String URL_UPDATE_PROFIL=URL_SERVER+"/update_profil.php";
 
     public final static int ID_ITEM_ACCUEIL=1;
     public final static int ID_ITEM_SETTINGS=2;
