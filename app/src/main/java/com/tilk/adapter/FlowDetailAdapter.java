@@ -63,7 +63,7 @@ public class FlowDetailAdapter extends ArrayAdapter<FlowDetail>{
         }
 
         viewHolder.tvTotal.setText(flowDetail.getTotalWater()+"L");
-        viewHolder.tvAvg.setText("Débit moyen : "+flowDetail.getAverageFlow()+"L/s");
+        viewHolder.tvAvg.setText("Débit moyen : "+flowDetail.getAverageFlow()+"L/min");
         viewHolder.tvStartTime.setText("Du "+flowDetail.getStartTime());
         viewHolder.tvEndTime.setText("Au "+flowDetail.getEndTime());
         // Return the completed view to render on screen

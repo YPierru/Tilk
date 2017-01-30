@@ -44,6 +44,7 @@ public class FlowDetailActivity extends AppCompatActivity {
 
         listFlowDetails = new ArrayList<>();
 
+        userProfil = new UserProfil(this);
         try {
             listFlowDetails=new GetData().execute().get();
         } catch (InterruptedException e) {
@@ -57,7 +58,6 @@ public class FlowDetailActivity extends AppCompatActivity {
         FlowDetailAdapter adapter = new FlowDetailAdapter(listFlowDetails,this);
         lvFlowDetail.setAdapter(adapter);
 
-        userProfil = new UserProfil(this);
     }
 
 
