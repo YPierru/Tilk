@@ -41,18 +41,4 @@ public class SettingsFragment extends PreferenceFragment  {
 
     }
 
-    /*private class MyOnPreferenceClickListener implements Preference.OnPreferenceClickListener{
-
-        int count=0;
-
-
-        @Override
-        public boolean onPreferenceClick(Preference preference) {
-            return false;
-        }
-    }*/
-
-
-
-
 }

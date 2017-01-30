@@ -7,7 +7,6 @@ import android.preference.PreferenceManager;
 import com.google.gson.Gson;
 import com.tilk.R;
 import com.tilk.utils.Constants;
-import com.tilk.utils.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,6 +98,11 @@ public class UserProfil {
         SharedPreferences.Editor editor = getEditor();
         editor.putInt(Constants.SESSION_ID_TILK,id);
         editor.apply();
+    }
+
+    public int getTilkId(){
+        SharedPreferences prefs = getSharedPref();
+        return prefs.getInt(Constants.SESSION_ID_TILK,-1);
     }
 
     public void setUserOffline() {

@@ -395,7 +395,7 @@ public class MainActivity extends AppCompatActivity {
             ArrayList<WaterLoad> listWaterLoads = new ArrayList<>();
             try {
 
-                String response = HttpPostManager.sendPost("",Constants.URL_GET_LOADS);
+                String response = HttpPostManager.sendPost("tilk_id="+userProfil.getTilkId(),Constants.URL_GET_LOADS);
 
                 JSONObject jsonObject = new JSONObject(response);
                 JSONArray arrayLoads = jsonObject.getJSONArray("response");

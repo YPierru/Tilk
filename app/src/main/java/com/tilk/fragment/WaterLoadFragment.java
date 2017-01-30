@@ -14,6 +14,7 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.tilk.R;
 import com.tilk.activity.FlowDetailActivity;
+import com.tilk.models.UserProfil;
 import com.tilk.models.WaterLoad;
 import com.tilk.utils.ChartBuilder;
 import com.tilk.utils.Constants;
@@ -45,6 +46,7 @@ public class WaterLoadFragment extends Fragment {
     private TextView tvStatYear;
     private LineChart chart_day,chart_week,chart_month, chart_year;
     private ChartBuilder chartBuilder;
+    private UserProfil userProfil;
 
     private EStatsTypes selectedStatType=EStatsTypes.none;
 
@@ -63,6 +65,7 @@ public class WaterLoadFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         waterLoad = (WaterLoad)getArguments().getSerializable("waterload");
+        userProfil = new UserProfil(getContext());
     }
 
     @Override
@@ -242,7 +245,7 @@ public class WaterLoadFragment extends Fragment {
 
         private void dayStatProcess(){
             try {
-                String received = HttpPostManager.sendPost("load_id=" + waterLoad.getId(), Constants.URL_GET_STATS_DAY);
+                String received = HttpPostManager.sendPost("load_id=" + waterLoad.getId()+"&tilk_id="+userProfil.getTilkId(), Constants.URL_GET_STATS_DAY);
 
                 //Logger.logI(received);
 
@@ -253,7 +256,7 @@ public class WaterLoadFragment extends Fragment {
 
                 for(int i=0;i<array.length();i++){
                     minutes=array.getJSONObject(i).getInt("minutes");
-                    cumul=array.getJSONObject(i).getInt("cumul");
+                    cumul=array.getJSONObject(i).getInt("cumul")/1000;
 
                     waterLoad.getStats(selectedStatType).addEntry(new Entry(minutes,cumul));
                 }
@@ -265,7 +268,7 @@ public class WaterLoadFragment extends Fragment {
 
         private void weekStatProcess(){
             try {
-                String received = HttpPostManager.sendPost("load_id=" + waterLoad.getId(), Constants.URL_GET_STATS_WEEK);
+                String received = HttpPostManager.sendPost("load_id=" + waterLoad.getId()+"&tilk_id="+userProfil.getTilkId(), Constants.URL_GET_STATS_WEEK);
 
                 //Logger.logI(received);
 
@@ -276,7 +279,7 @@ public class WaterLoadFragment extends Fragment {
 
                 for(int i=0;i<array.length();i++){
                     hours=array.getJSONObject(i).getInt("hours");
-                    cumul=array.getJSONObject(i).getInt("cumul");
+                    cumul=array.getJSONObject(i).getInt("cumul")/1000;
 
                     waterLoad.getStats(selectedStatType).addEntry(new Entry(hours,cumul));
                 }
@@ -288,7 +291,7 @@ public class WaterLoadFragment extends Fragment {
 
         private void monthStatProcess(){
             try {
-                String received = HttpPostManager.sendPost("load_id=" + waterLoad.getId(), Constants.URL_GET_STATS_MONTH);
+                String received = HttpPostManager.sendPost("load_id=" + waterLoad.getId()+"&tilk_id="+userProfil.getTilkId(), Constants.URL_GET_STATS_MONTH);
 
                 //Logger.logI(received);
 
@@ -299,7 +302,7 @@ public class WaterLoadFragment extends Fragment {
 
                 for(int i=0;i<array.length();i++){
                     hours6=array.getJSONObject(i).getInt("6Hours");
-                    cumul=array.getJSONObject(i).getInt("cumul");
+                    cumul=array.getJSONObject(i).getInt("cumul")/1000;
 
                     waterLoad.getStats(selectedStatType).addEntry(new Entry(hours6,cumul));
                 }
@@ -312,7 +315,7 @@ public class WaterLoadFragment extends Fragment {
         private void yearStatProcess(){
 
             try {
-                String received = HttpPostManager.sendPost("load_id=" + waterLoad.getId(), Constants.URL_GET_STATS_YEAR);
+                String received = HttpPostManager.sendPost("load_id=" + waterLoad.getId()+"&tilk_id="+userProfil.getTilkId(), Constants.URL_GET_STATS_YEAR);
 
                 //Logger.logI(received);
 
@@ -323,7 +326,7 @@ public class WaterLoadFragment extends Fragment {
 
                 for(int i=0;i<array.length();i++){
                     minutes=array.getJSONObject(i).getInt("days");
-                    cumul=array.getJSONObject(i).getInt("cumul");
+                    cumul=array.getJSONObject(i).getInt("cumul")/1000;
 
                     waterLoad.getStats(selectedStatType).addEntry(new Entry(minutes,cumul));
                 }
@@ -355,16 +358,16 @@ public class WaterLoadFragment extends Fragment {
             //Logger.logI("je monitor le flux du poste "+waterLoad.getName());
 
             try {
-                String received = HttpPostManager.sendPost("load_id=" + waterLoad.getId(), Constants.URL_GET_CURRENTFLOW);
+                String received = HttpPostManager.sendPost("load_id=" + waterLoad.getId()+"&tilk_id="+userProfil.getTilkId(), Constants.URL_GET_CURRENTFLOW);
                 //Logger.logI(received);
                 JSONObject jsonObject = new JSONObject(received);
 
-                waterLoad.setCurrentFlow(jsonObject.getInt("current_flow"));
+                waterLoad.setCurrentFlow(jsonObject.getInt("current_flow")*60/1000);
 
-                waterLoad.getStats(EStatsTypes.day).addEntry(new Entry(jsonObject.getInt("dMinutes"), jsonObject.getInt("dCumul")));
-                waterLoad.getStats(EStatsTypes.week).addEntry(new Entry(jsonObject.getInt("wHours"), jsonObject.getInt("wCumul")));
-                waterLoad.getStats(EStatsTypes.month).addEntry(new Entry(jsonObject.getInt("m6Hours"), jsonObject.getInt("mCumul")));
-                waterLoad.getStats(EStatsTypes.year).addEntry(new Entry(jsonObject.getInt("yDays"), jsonObject.getInt("yCumul")));
+                waterLoad.getStats(EStatsTypes.day).addEntry(new Entry(jsonObject.getInt("dMinutes"), jsonObject.getInt("dCumul")/1000));
+                waterLoad.getStats(EStatsTypes.week).addEntry(new Entry(jsonObject.getInt("wHours"), jsonObject.getInt("wCumul")/1000));
+                waterLoad.getStats(EStatsTypes.month).addEntry(new Entry(jsonObject.getInt("m6Hours"), jsonObject.getInt("mCumul")/1000));
+                waterLoad.getStats(EStatsTypes.year).addEntry(new Entry(jsonObject.getInt("yDays"), jsonObject.getInt("yCumul")/1000));
 
                 //Logger.logI(""+waterLoad.getStats(EStatsTypes.day).getLastEntryInt());
 

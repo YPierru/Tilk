@@ -12,6 +12,7 @@ import android.widget.ListView;
 import com.tilk.R;
 import com.tilk.adapter.FlowDetailAdapter;
 import com.tilk.models.FlowDetail;
+import com.tilk.models.UserProfil;
 import com.tilk.models.WaterLoad;
 import com.tilk.utils.Constants;
 import com.tilk.utils.HttpPostManager;
@@ -25,6 +26,7 @@ public class FlowDetailActivity extends AppCompatActivity {
 
     private WaterLoad waterLoad;
     private ArrayList<FlowDetail> listFlowDetails;
+    private UserProfil userProfil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +57,7 @@ public class FlowDetailActivity extends AppCompatActivity {
         FlowDetailAdapter adapter = new FlowDetailAdapter(listFlowDetails,this);
         lvFlowDetail.setAdapter(adapter);
 
+        userProfil = new UserProfil(this);
     }
 
 
@@ -89,7 +92,7 @@ public class FlowDetailActivity extends AppCompatActivity {
             ArrayList<FlowDetail> listFlowDetails = new ArrayList<>();
 
             try {
-                String received = HttpPostManager.sendPost("load_id=" + waterLoad.getId(), Constants.URL_GET_DATA);
+                String received = HttpPostManager.sendPost("load_id=" + waterLoad.getId()+"&tilk_id="+userProfil.getTilkId(), Constants.URL_GET_DATA);
 
                 //Logger.logI(received);
 
@@ -102,8 +105,8 @@ public class FlowDetailActivity extends AppCompatActivity {
                 for(int i=0;i<array.length();i++){
                     st=array.getJSONObject(i).getLong("start_time");
                     et=array.getJSONObject(i).getLong("end_time");
-                    total=array.getJSONObject(i).getInt("total_water");
-                    avg=array.getJSONObject(i).getInt("average_flow");
+                    total=array.getJSONObject(i).getInt("total_water")/1000;
+                    avg=array.getJSONObject(i).getInt("average_flow")*60/1000;
 
                     listFlowDetails.add(new FlowDetail(st,et,total,avg));
 
