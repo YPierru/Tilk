@@ -45,8 +45,6 @@ public class FlowDetailAdapter extends ArrayAdapter<FlowDetail>{
         // Check if an existing view is being reused, otherwise inflate the view
         ViewHolder viewHolder; // view lookup cache stored in tag
 
-        final View result;
-
         if (convertView == null) {
 
             viewHolder = new ViewHolder();

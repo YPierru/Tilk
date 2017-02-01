@@ -14,12 +14,12 @@ public class WaterLoad implements Serializable{
     private int id;
     private String name;
     private int status;
-    private int currentFlow;
+    private double currentFlow;
     private boolean inRoom;
     private StatsManager statsDay,statsWeek,statsMonth,statsYear;
 
 
-    public WaterLoad(int id,String name, int status, int currentFlow,boolean inRoom) {
+    public WaterLoad(int id,String name, int status, double currentFlow,boolean inRoom) {
         this.id=id;
         this.name = name;
         this.status = status;
@@ -47,11 +47,11 @@ public class WaterLoad implements Serializable{
         this.status = status;
     }
 
-    public int getCurrentFlow() {
+    public double getCurrentFlow() {
         return currentFlow;
     }
 
-    public void setCurrentFlow(int currentFlow) {
+    public void setCurrentFlow(double currentFlow) {
         this.currentFlow = currentFlow;
     }
 

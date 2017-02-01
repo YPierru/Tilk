@@ -19,6 +19,7 @@ import com.tilk.utils.HttpPostManager;
 
 import org.json.JSONArray;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -102,13 +103,17 @@ public class FlowDetailActivity extends AppCompatActivity {
                 long st,et;
                 int total,avg;
 
+
+                DecimalFormat df = new DecimalFormat("#.##");
+
                 for(int i=0;i<array.length();i++){
                     st=array.getJSONObject(i).getLong("start_time");
                     et=array.getJSONObject(i).getLong("end_time");
                     total=array.getJSONObject(i).getInt("total_water")/1000;
-                    avg=array.getJSONObject(i).getInt("average_flow")*60/1000;
+                    double flow = array.getJSONObject(i).getDouble("average_flow")*60/1000;
+                    flow = Double.parseDouble(df.format(flow).replace(",","."));
 
-                    listFlowDetails.add(new FlowDetail(st,et,total,avg));
+                    listFlowDetails.add(new FlowDetail(st,et,total,flow));
 
                 }
 

@@ -51,7 +51,7 @@ public class DateTimeUtils {
         if(getCurrentMonth().equals("01")){
             return monthsFrench[11];
         }else {
-            return monthsFrench[now.get(Calendar.MONTH)];
+            return monthsFrench[now.get(Calendar.MONTH)-1];
         }
     }
 

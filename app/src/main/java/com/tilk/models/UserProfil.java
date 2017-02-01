@@ -91,6 +91,10 @@ public class UserProfil {
     public ProfilTilkeur getProfilTilkeur(){
         SharedPreferences prefs = getSharedPref();
         String json=prefs.getString(Constants.SESSION_CT_PROFIL,"");
+
+        if(json.equals("")){
+            setProfilTilkeur(new ProfilTilkeur());
+        }
         return gson.fromJson(json,ProfilTilkeur.class);
     }
 

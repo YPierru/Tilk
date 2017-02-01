@@ -17,21 +17,23 @@ card_view:cardCornerRadius="4dp"
         android:orientation="vertical">
         <TextView
             android:id="@+id/tv_resume_eco_title"
-            android:layout_margin="5dp"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/resume_eco_title"
-            android:textSize="36sp"
-            android:textColor="@color/colorPrimary"
+            android:textSize="33sp"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginBottom="15dp"
+            android:textColor="#125f9b"
             android:textStyle="normal|bold"
-            android:textAlignment="viewStart"
-            android:paddingTop="5dp"
-            android:paddingLeft="10dp" />
+            android:textAlignment="viewStart" />
+
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:padding="10dp">
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="10dp">
 
             <TextView
                 android:id="@+id/tv_eco_hebdo_label"
@@ -39,42 +41,54 @@ card_view:cardCornerRadius="4dp"
                 android:layout_height="wrap_content"
                 android:text="@string/eco_hebdo"
                 android:textSize="20sp"
-                android:layout_alignParentLeft="true"
-                android:textColor="@android:color/background_dark"
-                android:paddingRight="5dp"
-                android:paddingLeft="10dp"/>
+                android:layout_marginStart="10dp"
+                android:layout_alignParentStart="true"
+                android:textColor="#464646" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
                 android:orientation="horizontal"
-                android:layout_alignParentRight="true">
+                android:layout_alignParentEnd="true">
 
-                <TextView
-                    android:id="@+id/tv_eco_eau_hebdo_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="-0.1 m3"
-                    android:textSize="20sp"
-                    android:textColor="@android:color/background_dark"
-                    android:paddingRight="10dp"/>
 
                 <TextView
                     android:id="@+id/tv_eco_euro_hebdo_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="-0.3€"
-                    android:textSize="20sp"
-                    android:textColor="@android:color/background_dark"
-                    android:paddingLeft="10dp" />
+                    android:layout_alignParentEnd="true"
+                    android:textSize="18sp"
+                    android:textColor="@android:color/background_dark" />
 
-            </LinearLayout>
+                <TextView
+                    android:id="@+id/tv_eco_eau_hebdo_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:text="-0.1 m3"
+                    android:layout_toStartOf="@id/tv_eco_euro_hebdo_value"
+                    android:textSize="18sp"
+                    android:textColor="@android:color/background_dark"/>
+            </RelativeLayout>
         </RelativeLayout>
+
+
+        <View
+            android:layout_width="260dp"
+            android:layout_height="2px"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="#000000"
+            />
+
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:padding="10dp">
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp">
 
             <TextView
                 android:id="@+id/tv_eco_mois_label"
@@ -82,40 +96,51 @@ card_view:cardCornerRadius="4dp"
                 android:layout_height="wrap_content"
                 android:text="@string/eco_mois"
                 android:textSize="20sp"
-                android:layout_alignParentLeft="true"
-                android:textColor="@android:color/background_dark"
-                android:paddingRight="5dp"
-                android:paddingLeft="10dp"/>
+                android:layout_alignParentStart="true"
+                android:textColor="#464646"
+                android:layout_marginStart="10dp" />
 
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginRight="10dp"
                 android:layout_alignParentRight="true">
-                <TextView
-                    android:id="@+id/tv_eco_eau_mois_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="-1.5 m3"
-                    android:textSize="20sp"
-                    android:textColor="@android:color/background_dark"
-                    android:paddingRight="10dp" />
                 <TextView
                     android:id="@+id/tv_eco_euro_mois_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="-4.5€"
-                    android:textSize="20sp"
-                    android:textColor="@android:color/background_dark"
-                    android:paddingLeft="10dp" />
-            </LinearLayout>
+                    android:text="-0.3€"
+                    android:layout_alignParentEnd="true"
+                    android:textSize="18sp"
+                    android:textColor="@android:color/background_dark"  />
+                <TextView
+                    android:id="@+id/tv_eco_eau_mois_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:text="-0.1 m3"
+                    android:layout_toStartOf="@id/tv_eco_euro_mois_value"
+                    android:textSize="18sp"
+                    android:textColor="@android:color/background_dark"/>
+            </RelativeLayout>
         </RelativeLayout>
+
+        <View
+            android:layout_width="260dp"
+            android:layout_height="2px"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="#000000"
+            />
+
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:padding="10dp">
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="5dp">
 
             <TextView
                 android:id="@+id/tv_eco_annee_label"
@@ -123,34 +148,35 @@ card_view:cardCornerRadius="4dp"
                 android:layout_height="wrap_content"
                 android:text="@string/eco_annuelle"
                 android:textSize="20sp"
-                android:layout_alignParentLeft="true"
-                android:textColor="@android:color/background_dark"
-                android:paddingRight="5dp"
-                android:paddingLeft="10dp"/>
+                android:layout_marginStart="10dp"
+                android:layout_alignParentStart="true"
+                android:textColor="#464646" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_alignParentRight="true">
-                <TextView
-                    android:id="@+id/tv_eco_eau_annee_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="-15 m3"
-                    android:textSize="20sp"
-                    android:textColor="@android:color/background_dark"
-                    android:paddingRight="10dp"/>
+                android:layout_marginRight="10dp"
+                android:layout_alignParentEnd="true">
 
                 <TextView
                     android:id="@+id/tv_eco_euro_annee_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="-45€"
-                    android:textSize="20sp"
-                    android:textColor="@android:color/background_dark"
-                    android:paddingLeft="10dp"/>
-            </LinearLayout>
+                    android:text="-0.3€"
+                    android:layout_alignParentEnd="true"
+                    android:textSize="18sp"
+                    android:textColor="@android:color/background_dark"/>
+                <TextView
+                    android:id="@+id/tv_eco_eau_annee_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="26dp"
+                    android:text="-0.1 m3"
+                    android:layout_toStartOf="@id/tv_eco_euro_annee_value"
+                    android:textSize="18sp"
+                    android:textColor="@android:color/background_dark"/>
+
+            </RelativeLayout>
         </RelativeLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

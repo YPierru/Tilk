@@ -35,19 +35,21 @@
                 android:layout_marginTop="45dp"
                 android:layout_marginBottom="15dp">
                 <TextView
+                    android:id="@+id/tv_vous"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
-                    android:text="Vous"
+                    android:text="VOUS"
                     android:gravity="center"
                     android:textStyle="normal|bold"
                     android:textSize="30sp" />
 
                 <TextView
+                    android:id="@+id/tv_christophe"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
-                    android:text="Christophe"
+                    android:text="CHRISTOPHE"
                     android:gravity="center"
                     android:textStyle="normal|bold"
                     android:textSize="30sp" />

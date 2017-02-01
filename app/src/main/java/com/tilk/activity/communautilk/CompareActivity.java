@@ -1,11 +1,13 @@
 package com.tilk.activity.communautilk;
 
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.tilk.R;
 
@@ -22,6 +24,13 @@ public class CompareActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        Typeface custom_font = Typeface.createFromAsset(getAssets(), "calibri_bold.ttf");
+
+        TextView tv = (TextView)findViewById(R.id.tv_vous);
+        tv.setTypeface(custom_font);
+        tv = (TextView)findViewById(R.id.tv_christophe);
+        tv.setTypeface(custom_font);
     }
 
     @Override

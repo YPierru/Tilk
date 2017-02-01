@@ -4,19 +4,17 @@
     <string name="menu_item_settings">Paramètres</string>
     <string name="menu_item_logout">Déconnexion</string>
 
-    <string name="debit_title">Débit</string>
+    <string name="debit_title">DEBIT</string>
     <string name="debit_unit">L/min</string>
-    <string name="conso_title">Consommation</string>
-    <string name="conso_jour">Journalière</string>
-    <string name="conso_hebdo">Hebdomadaire</string>
-    <string name="conso_mois">Mensuelle</string>
-    <string name="conso_annuelle">Annuelle</string>
-    <string name="evolution_title">Evolution</string>
+    <string name="conso_title">CONSOMMATION</string>
+    <string name="conso_jour">AUJOURD\'HUI</string>
+    <string name="conso_hebdo">CETTE SEMAINE</string>
+    <string name="evolution_title">EVOLUTION</string>
     <string name="resume_conso_title">Votre consommation</string>
-    <string name="resume_eco_title">Vos économies</string>
-    <string name="eco_hebdo">Hebdomadaire</string>
-    <string name="eco_mois">Mensuelle</string>
-    <string name="eco_annuelle">Annuelle</string>
+    <string name="resume_eco_title">VOS ECONOMIES</string>
+    <string name="eco_hebdo">CETTE SEMAINE</string>
+    <string name="eco_mois">MOIS</string>
+    <string name="eco_annuelle">ANNEE</string>
 
     <string name="tab_resume">Résumé</string>
     <string name="tab_douche">Douche</string>

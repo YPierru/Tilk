@@ -12,9 +12,9 @@ public class FlowDetail {
     private long startTime;
     private long endTime;
     private int totalWater;
-    private int averageFlow;
+    private double averageFlow;
 
-    public FlowDetail(long startTime, long endTime, int totalWater, int averageFlow) {
+    public FlowDetail(long startTime, long endTime, int totalWater, double averageFlow) {
         this.startTime = startTime*1000L;
         this.endTime = endTime*1000L;
         this.totalWater = totalWater;
@@ -38,7 +38,7 @@ public class FlowDetail {
         this.totalWater = totalWater;
     }
 
-    public int getAverageFlow() {
+    public double getAverageFlow() {
         return averageFlow;
     }
 

@@ -1,8 +1,11 @@
 package com.tilk.fragment;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +20,7 @@ import com.tilk.models.UserProfil;
 import com.tilk.models.WaterLoad;
 import com.tilk.utils.ChartBuilder;
 import com.tilk.utils.Constants;
+import com.tilk.utils.DateTimeUtils;
 import com.tilk.utils.EStatsTypes;
 import com.tilk.utils.HttpPostManager;
 import com.tilk.utils.Logger;
@@ -95,11 +99,57 @@ public class ResumeFragment extends Fragment{
     @Override
     public void onActivityCreated (Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
+        Typeface custom_font = Typeface.createFromAsset(getActivity().getAssets(), "trebuc_bold.ttf");
+
+        TextView tvEcoEauHebdo = (TextView)getView().findViewById(R.id.tv_eco_eau_hebdo_value);
+        tvEcoEauHebdo.setText(Html.fromHtml("0.1 m<sup><small>3</small></sup>"));
+        tvEcoEauHebdo.setTextColor(Color.parseColor("#47CA46"));
+        tvEcoEauHebdo.setTypeface(custom_font);
+
+        TextView tvEcoEuroHebdo = (TextView)getView().findViewById(R.id.tv_eco_euro_hebdo_value);
+        tvEcoEuroHebdo.setText("0.3 €");
+        tvEcoEuroHebdo.setTextColor(Color.parseColor("#47CA46"));
+        tvEcoEuroHebdo.setTypeface(custom_font);
+
+        TextView tvEcoEauMonth = (TextView)getView().findViewById(R.id.tv_eco_eau_mois_value);
+        tvEcoEauMonth.setText(Html.fromHtml("1.5 m<sup><small>3</small></sup>"));
+        tvEcoEauMonth.setTextColor(Color.parseColor("#47CA46"));
+        tvEcoEauMonth.setTypeface(custom_font);
+
+        TextView tvEcoEuroMonth = (TextView)getView().findViewById(R.id.tv_eco_euro_mois_value);
+        tvEcoEuroMonth.setText("4.5 €");
+        tvEcoEuroMonth.setTextColor(Color.parseColor("#47CA46"));
+        tvEcoEuroMonth.setTypeface(custom_font);
+
+        TextView tvEcoEauYear = (TextView)getView().findViewById(R.id.tv_eco_eau_annee_value);
+        tvEcoEauYear.setText(Html.fromHtml("15 m<sup><small>3</small></sup>"));
+        tvEcoEauYear.setTextColor(Color.parseColor("#CA4646"));
+        tvEcoEauYear.setTypeface(custom_font);
+
+        TextView tvEcoEuroYear = (TextView)getView().findViewById(R.id.tv_eco_euro_annee_value);
+        tvEcoEuroYear.setText("45 €");
+        tvEcoEuroYear.setTextColor(Color.parseColor("#CA4646"));
+        tvEcoEuroYear.setTypeface(custom_font);
+
+        TextView tvEcoHebdoLabel = (TextView)getView().findViewById(R.id.tv_eco_hebdo_label);
+        tvEcoHebdoLabel.setTypeface(custom_font);
+
+        TextView tvEcoMoisLabel = (TextView)getView().findViewById(R.id.tv_eco_mois_label);
+        tvEcoMoisLabel.setText(DateTimeUtils.getCurrentMonthName().toUpperCase());
+        tvEcoMoisLabel.setTypeface(custom_font);
+
+        TextView tvEcoAnneeLabel = (TextView)getView().findViewById(R.id.tv_eco_annee_label);
+        tvEcoAnneeLabel.setText(DateTimeUtils.getCurrentYear());
+        tvEcoAnneeLabel.setTypeface(custom_font);
 
         tvStatDay = (TextView)getView().findViewById(R.id.tv_conso_jour_value);
+        tvStatDay.setTypeface(custom_font);
         tvStatWeek = (TextView)getView().findViewById(R.id.tv_conso_hebdo_value);
+        tvStatWeek.setTypeface(custom_font);
         tvStatMonth = (TextView)getView().findViewById(R.id.tv_conso_mois_value);
+        tvStatMonth.setTypeface(custom_font);
         tvStatYear = (TextView)getView().findViewById(R.id.tv_conso_annee_value);
+        tvStatYear.setTypeface(custom_font);
         chart_day = (LineChart)getView().findViewById(R.id.chart_evolution_day);
         chart_week = (LineChart)getView().findViewById(R.id.chart_evolution_week);
         chart_month = (LineChart)getView().findViewById(R.id.chart_evolution_month);
@@ -109,6 +159,26 @@ public class ResumeFragment extends Fragment{
         Button btnShowGraphWeek = (Button) getView().findViewById(R.id.btn_graph_week);
         Button btnShowGraphMonth = (Button) getView().findViewById(R.id.btn_graph_month);
         Button btnShowGraphYear = (Button) getView().findViewById(R.id.btn_graph_year);
+
+        TextView tv = (TextView)getView().findViewById(R.id.tv_conso_title);
+        tv.setTypeface(custom_font);
+
+        tv = (TextView)getView().findViewById(R.id.tv_evolution_title);
+        tv.setTypeface(custom_font);
+
+        tv = (TextView)getView().findViewById(R.id.tv_jours_conso);
+        tv.setTypeface(custom_font);
+
+        tv = (TextView)getView().findViewById(R.id.tv_semaine_conso);
+        tv.setTypeface(custom_font);
+
+        TextView tvConsoMonth = (TextView)getView().findViewById(R.id.tv_mois_conso);
+        tvConsoMonth.setText(DateTimeUtils.getCurrentMonthName().toUpperCase());
+        tvConsoMonth.setTypeface(custom_font);
+
+        TextView tvConsoYear = (TextView)getView().findViewById(R.id.tv_annee_conso);
+        tvConsoYear.setText(DateTimeUtils.getCurrentYear());
+        tvConsoYear.setTypeface(custom_font);
 
         btnShowGraphDay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,6 +213,9 @@ public class ResumeFragment extends Fragment{
         });
 
         btnShowGraphDay.performClick();
+
+
+
     }
 
 

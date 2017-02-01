@@ -1,5 +1,6 @@
 package com.tilk.fragment;
 
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,7 @@ import com.tilk.models.UserProfil;
 import com.tilk.models.WaterLoad;
 import com.tilk.utils.ChartBuilder;
 import com.tilk.utils.Constants;
+import com.tilk.utils.DateTimeUtils;
 import com.tilk.utils.EStatsTypes;
 import com.tilk.utils.HttpPostManager;
 import com.tilk.utils.Logger;
@@ -24,6 +26,7 @@ import com.tilk.utils.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -113,20 +116,51 @@ public class RoomFragment extends Fragment {
     public void onActivityCreated (Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
 
+        Typeface custom_font = Typeface.createFromAsset(getActivity().getAssets(), "trebuc_bold.ttf");
+
         tvDebitValue = (TextView)getView().findViewById(R.id.tv_debit_value);
+        tvDebitValue.setTypeface(custom_font);
         tvStatDay = (TextView)getView().findViewById(R.id.tv_conso_jour_value);
+        tvStatDay.setTypeface(custom_font);
         tvStatWeek = (TextView)getView().findViewById(R.id.tv_conso_hebdo_value);
+        tvStatWeek.setTypeface(custom_font);
         tvStatMonth = (TextView)getView().findViewById(R.id.tv_conso_mois_value);
+        tvStatMonth.setTypeface(custom_font);
         tvStatYear = (TextView)getView().findViewById(R.id.tv_conso_annee_value);
+        tvStatYear.setTypeface(custom_font);
         chart_day = (LineChart)getView().findViewById(R.id.chart_evolution_day);
         chart_week = (LineChart)getView().findViewById(R.id.chart_evolution_week);
         chart_month = (LineChart)getView().findViewById(R.id.chart_evolution_month);
         chart_year = (LineChart)getView().findViewById(R.id.chart_evolution_year);
-
         Button btnShowGraphDay = (Button) getView().findViewById(R.id.btn_graph_day);
         Button btnShowGraphWeek = (Button) getView().findViewById(R.id.btn_graph_week);
         Button btnShowGraphMonth = (Button) getView().findViewById(R.id.btn_graph_month);
         Button btnShowGraphYear = (Button) getView().findViewById(R.id.btn_graph_year);
+        Button btnDetail = (Button) getView().findViewById(R.id.btn_details);
+        btnDetail.setTypeface(custom_font);
+
+        TextView tv = (TextView)getView().findViewById(R.id.tv_debit_title);
+        tv.setTypeface(custom_font);
+
+        tv = (TextView)getView().findViewById(R.id.tv_conso_title);
+        tv.setTypeface(custom_font);
+
+        tv = (TextView)getView().findViewById(R.id.tv_evolution_title);
+        tv.setTypeface(custom_font);
+
+        tv = (TextView)getView().findViewById(R.id.tv_jours_conso);
+        tv.setTypeface(custom_font);
+
+        tv = (TextView)getView().findViewById(R.id.tv_semaine_conso);
+        tv.setTypeface(custom_font);
+
+        TextView tvConsoMonth = (TextView)getView().findViewById(R.id.tv_mois_conso);
+        tvConsoMonth.setText(DateTimeUtils.getCurrentMonthName().toUpperCase());
+        tvConsoMonth.setTypeface(custom_font);
+
+        TextView tvConsoYear = (TextView)getView().findViewById(R.id.tv_annee_conso);
+        tvConsoYear.setText(DateTimeUtils.getCurrentYear());
+        tvConsoYear.setTypeface(custom_font);
 
         btnShowGraphDay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -385,10 +419,15 @@ public class RoomFragment extends Fragment {
                 JSONArray array = jsonObject.getJSONArray("response");
 
                 WaterLoad waterLoad;
+                DecimalFormat df = new DecimalFormat("#.##");
                 for(int i=0;i<array.length();i++){
+
                     waterLoad = room.getWaterLoadById(array.getJSONObject(i).getInt("id"));
 
-                    waterLoad.setCurrentFlow(array.getJSONObject(i).getInt("current_flow")*60/1000);
+                    double flow = array.getJSONObject(i).getInt("current_flow")*60/1000;
+                    flow = Double.parseDouble(df.format(flow).replace(",","."));
+
+                    waterLoad.setCurrentFlow(flow);
 
                     waterLoad.getStats(EStatsTypes.day).addEntry(new Entry(array.getJSONObject(i).getInt("dMinutes"), array.getJSONObject(i).getInt("dCumul")/1000));
                     waterLoad.getStats(EStatsTypes.week).addEntry(new Entry(array.getJSONObject(i).getInt("wHours"), array.getJSONObject(i).getInt("wCumul")/1000));

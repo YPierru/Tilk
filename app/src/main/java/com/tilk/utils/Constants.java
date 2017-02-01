@@ -8,7 +8,7 @@ public class Constants {
 
     public final static String TAG_LOG="TILK";
 
-    public final static int MONITOR_SECONDS=5;
+    public final static int MONITOR_SECONDS=2;
 
     public final static String SESSION_FIRSTRUN="firstrun";
     public final static String SESSION_STATUS="status";
