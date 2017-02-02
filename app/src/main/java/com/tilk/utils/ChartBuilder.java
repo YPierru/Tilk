@@ -89,21 +89,21 @@ public class ChartBuilder {
             labelPrevious="Hier";
         }else if(statsTypes==EStatsTypes.week){
             xMax=168;
-            yMax=1000;
+            yMax=3000;
             xGranularity=24f;
             formatter = getFormatterWeek();
             labelCurrent="Cette semaine";
             labelPrevious="Semaine dernière";
         }else if(statsTypes==EStatsTypes.month){
             xMax=DateTimeUtils.getAmountOf6hInCurrentMonth();
-            yMax=3000;
+            yMax=9000;
             xGranularity=6f;
             formatter = getFormatterMonth();
             labelCurrent=DateTimeUtils.getCurrentMonthName();
             labelPrevious=DateTimeUtils.getPreviousMonthName();
         }else if(statsTypes==EStatsTypes.year){
             xMax=DateTimeUtils.getNumberOfDayInYear();
-            yMax=15000;
+            yMax=160000;
             xGranularity=60f;
             formatter = getFormatterYear();
             labelCurrent=DateTimeUtils.getCurrentYear();

@@ -22,6 +22,7 @@ import com.tilk.utils.DateTimeUtils;
 import com.tilk.utils.EStatsTypes;
 import com.tilk.utils.HttpPostManager;
 import com.tilk.utils.Logger;
+import com.tilk.utils.PreviousHistoric;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -50,6 +51,7 @@ public class RoomFragment extends Fragment {
     private ChartBuilder chartBuilder;
     private EStatsTypes selectedStatType=EStatsTypes.none;
     private UserProfil userProfil;
+    private int idUser=-1;
 
     public static RoomFragment newInstance(Room room){
         RoomFragment roomFragment = new RoomFragment();
@@ -66,6 +68,7 @@ public class RoomFragment extends Fragment {
         super.onCreate(savedInstanceState);
         room = (Room)getArguments().getSerializable("room");
         userProfil = new UserProfil(getContext());
+        idUser=userProfil.getUserId();
     }
 
     public void startMonitor(){
@@ -201,19 +204,14 @@ public class RoomFragment extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-
-                chartBuilder.buildGraph(room.getEntries(selectedStatType),room.getPreviousEntries(selectedStatType),selectedStatType);
-
-
-                /*if(selectedStatType==EStatsTypes.day) {
-                    chartBuilder.buildGraphDay(room.getEntries(selectedStatType));
-                }else if(selectedStatType==EStatsTypes.week){
-                    chartBuilder.buildGraphWeek(room.getEntries(selectedStatType));
-                }else if(selectedStatType==EStatsTypes.month){
-                    chartBuilder.buildGraphMonth(room.getEntries(selectedStatType));
-                }else if(selectedStatType==EStatsTypes.year){
-                    chartBuilder.buildGraphYear(room.getEntries(selectedStatType));
-                }*/
+                ArrayList<Entry> listPrevious;
+                if(idUser==1){
+                    PreviousHistoric previousHistoric = new PreviousHistoric();
+                    listPrevious=previousHistoric.getListEntry(selectedStatType);
+                }else{
+                    listPrevious=room.getPreviousEntries(selectedStatType);
+                }
+                chartBuilder.buildGraph(room.getEntries(selectedStatType),listPrevious,selectedStatType);
             }
         });
     }

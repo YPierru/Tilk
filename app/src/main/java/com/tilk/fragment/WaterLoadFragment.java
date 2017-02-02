@@ -23,11 +23,13 @@ import com.tilk.utils.DateTimeUtils;
 import com.tilk.utils.EStatsTypes;
 import com.tilk.utils.HttpPostManager;
 import com.tilk.utils.Logger;
+import com.tilk.utils.PreviousHistoric;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -50,6 +52,7 @@ public class WaterLoadFragment extends Fragment {
     private LineChart chart_day,chart_week,chart_month, chart_year;
     private ChartBuilder chartBuilder;
     private UserProfil userProfil;
+    private int idUser=-1;
 
     private EStatsTypes selectedStatType=EStatsTypes.none;
 
@@ -69,6 +72,7 @@ public class WaterLoadFragment extends Fragment {
         super.onCreate(savedInstanceState);
         waterLoad = (WaterLoad)getArguments().getSerializable("waterload");
         userProfil = new UserProfil(getContext());
+        idUser = userProfil.getUserId();
     }
 
     @Override
@@ -206,7 +210,16 @@ public class WaterLoadFragment extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                chartBuilder.buildGraph(waterLoad.getStats(selectedStatType).getListHistoricEntry(),waterLoad.getStats(selectedStatType).getListHistoricPreviousEntry(),selectedStatType);
+
+                ArrayList<Entry> listPrevious;
+                if(idUser==1){
+                    PreviousHistoric previousHistoric = new PreviousHistoric();
+                    listPrevious=previousHistoric.getListEntry(selectedStatType);
+                }else{
+                    listPrevious=waterLoad.getStats(selectedStatType).getListHistoricPreviousEntry();
+                }
+
+                chartBuilder.buildGraph(waterLoad.getStats(selectedStatType).getListHistoricEntry(),listPrevious,selectedStatType);
             }
         });
     }
@@ -391,7 +404,7 @@ public class WaterLoadFragment extends Fragment {
 
             try {
                 String received = HttpPostManager.sendPost("load_id=" + waterLoad.getId()+"&tilk_id="+userProfil.getTilkId(), Constants.URL_GET_CURRENTFLOW);
-                //Logger.logI(received);
+                //Logger.logI("dzjeidozjei"+received);
                 JSONObject jsonObject = new JSONObject(received);
                 DecimalFormat df = new DecimalFormat("#.##");
                 double flow = jsonObject.getDouble("current_flow")*60/1000;

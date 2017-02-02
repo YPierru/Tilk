@@ -70,6 +70,8 @@ public class StatsManager implements Serializable{
     public ArrayList<Entry> getListHistoricPreviousEntry() {
         ArrayList<Entry> arrayList = new ArrayList<>();
 
+
+
         if(listHistoricPrevious!=null){
             for(Coordinate coo: listHistoricPrevious){
                 arrayList.add(new Entry(coo.getX(),coo.getY()));
